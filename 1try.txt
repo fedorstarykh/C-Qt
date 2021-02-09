@@ -1,0 +1,80 @@
+
+int main(int argc, char *argv[])
+{
+	//кнопки списком
+
+	QApplication app(argc, argv);
+	QWidget wgt;
+	//splitters
+	
+	/*
+	QTextEdit* ptxt1 = new QTextEdit;
+	QTextEdit* ptxt2 = new QTextEdit;
+	QTextEdit* ptxt3 = new QTextEdit;
+	QTextEdit* ptxt4 = new QTextEdit;
+	 //текс эдиты
+	
+	spl.addWidget(ptxt2);
+	spl.addWidget(ptxt3);
+	spl.addWidget(ptxt4);
+	
+	QCheckBox* pchkCopy = new QCheckBox("&Copy");
+	//QSplitter* splittin = new QSplitter("a ", "b ");
+	
+	//spl.addWidget(pchkCopy);// пока не понятно как сделать
+	QCheckBox* pchkCut = new QCheckBox("&Cut");
+	QCheckBox* pchkPaste = new QCheckBox("&Paste");
+	QCheckBox* pchkDelete = new QCheckBox("&Delete");
+	pchkCopy->setChecked(true);
+	pchkCut->setChecked(true);
+	pchkPaste->setChecked(true);
+	pchkDelete->setChecked(true);
+	QBoxLayout* pvbxLayout = new QBoxLayout(QVBoxLayout::TopToBottom);
+	pvbxLayout->addWidget(pchkCopy);
+	QSplitter spl(Qt::Horizontal);			//?
+	pvbxLayout->addWidget(pchkCut);
+	pvbxLayout->addWidget(pchkPaste);
+	pvbxLayout->addWidget(pchkDelete);
+	//pvbxLayout->addWidget(splittin);
+
+	
+
+	QPushButton* pcmd_Upper_Pos = new QPushButton("Upper");
+	QPushButton* pcmd_Lower_Pos = new QPushButton("Lower");
+	
+	//QBoxLayout* pvbxLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+	pvbxLayout->addWidget(pcmd_Upper_Pos, 1);
+	pvbxLayout->addWidget(pcmd_Lower_Pos, 2);
+	
+
+	QAction* pactCopy = new QAction("file copy action", 0);
+	pactCopy->setText("&Copy");
+	pactCopy->setShortcut(QKeySequence("CTRL+C"));
+	pactCopy->setToolTip("Copy Document");
+	pactCopy->setStatusTip("Copy the file to disk");
+	pactCopy->setWhatsThis("Copy the file to disk");
+	//QAction(QObject * parent = nullptr);
+	//pvbxLayout->addWidget(pactCopy, 0, {0});
+	/*
+	connect(pactSave, SIGNAL(triggered()), SLOТ(slotSave()));
+	QМenu* pmnuFile = new QМenu("&File");
+	pmnu->addAction(pactSave);
+	QТoolBar* ptb = new QТoolBar("Linker ToolBar");
+	ptb->addAction(pactSave);
+	*/
+
+
+	//wgt.setLayout(pbxLayout); // кнопки списком
+	wgt.setWindowTitle("Menu");
+	wgt.setLayout(pvbxLayout); // чекбокс список
+	wgt.resize(200, 40);
+	wgt.show();
+
+	/*
+	MyMenu MainWin;
+	MainWin.setWindowTitle("Menu");
+	MainWin.isTopLevel();
+	MainWin.show();
+	*/
+	return app.exec();
+}
