@@ -24,12 +24,13 @@ int main(int argc, char** argv)
     QMenu* ppaste = new QMenu("&Paste");
     QMenu* pdelete = new QMenu("&Delete ");
     QMenu* pmore = new QMenu("&More");
-
-    QBoxLayout* pvbxLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+  
+    QBoxLayout* pvbxLayout = new QVBoxLayout();
    
     //pmore->addSeparator();
 
     QAction* pCheckableAction = pmore->addAction("&Copy");
+
     pCheckableAction->setCheckable(true);
     pCheckableAction->setChecked(true);
     pmore->addSeparator();
@@ -49,28 +50,32 @@ int main(int argc, char** argv)
 
     QMenu* pmore_extendedmenu = new QMenu("&More than more", pmore);
     pmore->addMenu(pmore_extendedmenu);
-    pmore_extendedmenu->addAction("&Exit", &app, SLOT(quit()));
-    pmore_extendedmenu->addAction("&One more exit", &app, SLOT(quit()));
+    pmore_extendedmenu->addAction("&Exit", &app, &QApplication::quit);
+    pmore_extendedmenu->addAction("&One more exit", &app, &QApplication::quit);
    // QMenu pmoreextendedmenu.resize(300, 100);
 
     QPushButton* pcmd_Upper_Pos = new QPushButton("Upper"); // тоже пока не используется
     QPushButton* pcmd_Lower_Pos = new QPushButton("Lower");
 
-   // QBoxLayout* pvbxLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-  //  pvbxLayout->addWidget(pcmd_Upper_Pos, 1);
-   // pvbxLayout->addWidget(pcmd_Lower_Pos, 2);
+   
+    pvbxLayout->addWidget(pcmd_Upper_Pos);
+    pvbxLayout->addWidget(pcmd_Lower_Pos);
+    pvbxLayout->addWidget(pmore);
+
    // mnuBar.Orientation::horizontal;
     mnuBar.setWindowTitle("Main Menu");
     mnuBar.addMenu(pcopy);
     mnuBar.addMenu(pcut);
     mnuBar.addMenu(ppaste);
     mnuBar.addMenu(pdelete);
-    mnuBar.addMenu(pmore);
+    //mnuBar.addMenu(pmore);
   //  mnuBar.addWidget(pvbxLayout);
     mnuBar.resize(300, 150);
-    mnuBar.show();
+   // mnuBar.show();
     //wgt.resize(260, 70);
-   // wgt.show();
+
+    wgt.setLayout(pvbxLayout);
+    wgt.show();
 
     return app.exec();
 }
