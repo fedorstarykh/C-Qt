@@ -11,6 +11,7 @@
 #include <QList>
 #include <QMenu>
 #include <QMenuBar>
+#include <QTableWidget>
 
 class MyWindow : public QDialog
 {
@@ -19,18 +20,14 @@ class MyWindow : public QDialog
 public:
 	MyWindow(QWidget *parent = 0);
 	virtual ~MyWindow();
+	
 private:
-	//QLabel *lbl;
-	//QLineEdit *line;
-	QMenuBar *mnuBar;
 	QCheckBox* cb1;
 	QCheckBox* cb2;
 	QCheckBox* cb3;
 	QCheckBox* cb4;
 	QPushButton* up;
 	QPushButton* down; 
-	
-	//QList<QString> *list;
 
 //private slots:
 //	void UpClicked();
