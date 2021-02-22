@@ -1,11 +1,9 @@
-//#include "Test1.h"
 #include <QtWidgets/QApplication>
 #include <QListWidget>
 #include <QCheckBox>
 #include <QAction>
 #include <QMenuBar>
 #include <QObject>
-//#include "main.h"
 #include "MyWindow.h"
 #include "sigsnslots.h"
 

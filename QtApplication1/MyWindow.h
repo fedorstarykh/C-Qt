@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QListWidgetItem>
 #include <QSplitter>
+#include <QBoxLayout>
+
 class MyWindow : public QDialog
 {
 	Q_OBJECT
@@ -12,28 +14,34 @@ class MyWindow : public QDialog
 public:
 	MyWindow(QWidget *parent = 0);
 	virtual ~MyWindow();
+	//splitter as main frame
 	QSplitter* splitter;
-private:
 	//left layer
-	
-	QMenu* menu;
 	QListWidgetItem* copyitem_left;
 	QListWidgetItem* cutitem_left;
 	QListWidgetItem* pasteitem_left;
 	QListWidgetItem* deleteitem_left;
 	QListWidgetItem* more_item_left;
-	//mid layer
-	QListWidgetItem* copyitem;
-	QListWidgetItem* cutitem;
-	QListWidgetItem* pasteitem;
-	QListWidgetItem* deleteitem;
-	QListWidgetItem* more_item;
+private:
+	//menu for right part
+	QMenu* menu;
+
 	//buttons
 	QPushButton* up;
 	QPushButton* down; 
-//private slots:
-//	void UpClicked();
-//	void DownClicked();
-};
+	//Actions(in menu)
+	QAction* pactCopy;
+	QAction* pactCut;
+	QAction* pactPaste;
+	QAction* pactDelete;
+	QAction* pactMore;
+	//Layouts
+	QVBoxLayout* leftWgt_layout;
+	QVBoxLayout* menuWgt_layout;
 
+private slots:
+	void cutVision();
+//	void slotCut();
+};
+//void MyWindow::copyClicked(){ exit(0); }
 #endif
