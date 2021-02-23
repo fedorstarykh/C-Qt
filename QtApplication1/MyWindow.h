@@ -22,10 +22,16 @@ public:
 	QListWidgetItem* pasteitem_left;
 	QListWidgetItem* deleteitem_left;
 	QListWidgetItem* more_item_left;
+
 private:
+	//wdgts
+	QListWidget* listing_left;
+	QWidget* leftWgt;
+	QWidget* menuWgt;
+	QWidget* moreWgt;
 	//menu for right part
 	QMenu* menu;
-
+	QMenu* moremenu;
 	//buttons
 	QPushButton* up;
 	QPushButton* down; 
@@ -38,10 +44,16 @@ private:
 	//Layouts
 	QVBoxLayout* leftWgt_layout;
 	QVBoxLayout* menuWgt_layout;
-
+	QVBoxLayout* more_layout;
+	//changing true - false
+	bool cut_tf_value = true;
+	bool more_tf_value = true;
 private slots:
 	void cutVision();
-//	void slotCut();
+	void more_Window();
+	void more_add_del();
 };
+
+
 //void MyWindow::copyClicked(){ exit(0); }
 #endif
