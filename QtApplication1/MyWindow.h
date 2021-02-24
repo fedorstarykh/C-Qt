@@ -6,6 +6,11 @@
 #include <QListWidgetItem>
 #include <QSplitter>
 #include <QBoxLayout>
+#include <QList>
+#include <QMenu>
+#include <QMenuBar>
+#include <QTableWidget>
+#include <QListWidget>
 
 class MyWindow : public QDialog
 {
@@ -52,6 +57,10 @@ private slots:
 	void cutVision();
 	void more_Window();
 	void more_add_del();
+	
+//private slots:
+//	void UpClicked();
+//	void DownClicked();
 };
 
 

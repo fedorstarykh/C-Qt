@@ -1,5 +1,7 @@
 #include "MyWindow.h"
 #include "sigsnslots.h"
+//#include "sigsnslots.h"
+#include <QList>
 #include <QtWidgets>
 #include <QSplitter>
 #include <QListWidget>
@@ -10,7 +12,6 @@
 
 MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 {
-	//buttons for left part
 	up = new QPushButton("Move up");
 	down = new QPushButton("Move down");
 	//menu
@@ -85,6 +86,7 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	moremenu->addAction(pactCut);
 	moremenu->addAction(pactPaste);
 	moremenu->addAction(pactDelete);
+	//QObject::connect(up, SIGNAL(clicked(), &app, SLOT(quit() ))); //не работает почему то
 
 	//connect(pactMore, &QAction::triggered, qApp, QApplication::quit);//закрытие программы при клике кнопки copy
 	connect(pactCut, SIGNAL(triggered()), SLOT(cutVision()));
@@ -94,9 +96,17 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	menuWgt_layout->addWidget(menu);
 	more_layout->addWidget(moremenu);
 	menuWgt->setLayout(menuWgt_layout);
-	menuWgt->setMinimumSize(100, 100);
 	moreWgt->setLayout(more_layout);
 	moreWgt->setVisible(false);
+	
+	//min sizes
+	moreWgt->setMinimumSize(150, 100);
+	//leftWgt->setMinimumSize(100, 100);
+	menuWgt->setMinimumSize(150, 100);
+	leftWgt->setFixedSize(QSize(150, 300));
+	//menuWgt->setFixedSize(QSize(150, 300));
+	//moreWgt->setFixedSize(QSize(150, 300));
+
 	//pactCut->setDisabled(false);
 
 	leftWgt->setStyleSheet("color: #005eff;");//blue text
@@ -110,8 +120,10 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	splitter->setCollapsible(0, false);
 	splitter->setCollapsible(1, false);
 	splitter->setCollapsible(2, false);
+	splitter->setCollapsible(3, false);
 
-	splitter->resize(600, 500);
+
+	splitter->resize(700, 700);
 	splitter->setWindowTitle("MENU");
 	menuWgt->setStyleSheet("QMenu::item:NoUpdate { background-color: white; color: #005eff; }");//white font blue text
 	splitter->show();

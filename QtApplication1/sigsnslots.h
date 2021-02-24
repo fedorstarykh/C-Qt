@@ -1,7 +1,7 @@
-#ifndef SIGSNSLOTS_H
-#define SIGSNSLOTS_H
-#include <QMetaObject>
-#include <QObject>
+//#ifndef SIGSNSLOTS_H
+//#define SIGSNSLOTS_H
+//#include <QMetaObject>
+//#include <QObject>
 //
 //class MySlot : public QObject
 //{
@@ -43,4 +43,4 @@
 //
 //};
 //
-#endif
+//#endif
