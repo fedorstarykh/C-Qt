@@ -51,13 +51,14 @@ private:
 	QVBoxLayout* menuWgt_layout;
 	QVBoxLayout* more_layout;
 	//changing true - false
-	bool cut_tf_value = true;
+	bool cut_tf_value = false;
 	bool more_tf_value = true;
 private slots:
 	void cutVision();
 	void more_Window();
 	void more_add_del();
-	
+//signals:
+//	void cutSignal();
 //private slots:
 //	void UpClicked();
 //	void DownClicked();

@@ -81,23 +81,34 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	menu->addAction(pactPaste);
 	menu->addAction(pactDelete);
 	menu->addAction(pactMore);
+
+	//===================submenu filling
+	QMenu* submenuMore = menu->addMenu("More");
+	submenuMore->addAction(pactCopy);
+	submenuMore->addAction(pactCut);
+	submenuMore->addAction(pactPaste);
+	submenuMore->addAction(pactDelete);
+	//===================
 	//all actions for moremenu
 	moremenu->addAction(pactCopy);
 	moremenu->addAction(pactCut);
 	moremenu->addAction(pactPaste);
 	moremenu->addAction(pactDelete);
+	//connection signals and slots
 	//QObject::connect(up, SIGNAL(clicked(), &app, SLOT(quit() ))); //не работает почему то
-
 	//connect(pactMore, &QAction::triggered, qApp, QApplication::quit);//закрытие программы при клике кнопки copy
-	connect(pactCut, SIGNAL(triggered()), SLOT(cutVision()));
-	connect(pactMore, SIGNAL(triggered()), SLOT(more_Window()));
-	//connect(cutitem_left, SIGNAL(changed(), SLOT(cutVision())));
+	//connect(pactCut, SIGNAL(triggered()), SLOT(cutVision()));
+	//connect(pactMore, SIGNAL(hovered()), SLOT(more_Window()));//for submenu ver1
+	//connect(listing_left, &QListWidget::itemChanged(&QListWidgetItem::copyitem_left), SLOT(cutVision()));
+	//connect(this, &MyWindow::cutSignal, &MyWindow::cutVision);
+	QObject::connect(listing_left, SIGNAL(itemChanged(cutitem_left)), SLOT(cutVision()));
+	//connect(listing_left, &QListWidget::itemChanged, /*this,*/ MyWindow::cutVision());
 
 	menuWgt_layout->addWidget(menu);
 	more_layout->addWidget(moremenu);
 	menuWgt->setLayout(menuWgt_layout);
-	moreWgt->setLayout(more_layout);
-	moreWgt->setVisible(false);
+	//moreWgt->setLayout(more_layout);
+	//moreWgt->setVisible(false);
 	
 	//min sizes
 	moreWgt->setMinimumSize(150, 100);
@@ -106,8 +117,6 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	leftWgt->setFixedSize(QSize(150, 300));
 	//menuWgt->setFixedSize(QSize(150, 300));
 	//moreWgt->setFixedSize(QSize(150, 300));
-
-	//pactCut->setDisabled(false);
 
 	leftWgt->setStyleSheet("color: #005eff;");//blue text
 	splitter = new QSplitter(Qt::Horizontal);
@@ -129,18 +138,33 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	splitter->show();
 	
 }
-//тестовый слот для кнопки кат
+//тестовый слот для кнопки кат ver_1
+//void MyWindow::cutVision()
+//{	
+//	//pactCut->setVisible(false);//hide cut on right menu
+//	cutitem_left->setHidden(cut_tf_value);//hide cut on left menu
+//	//возможность скрыть и показать объект по клику Cut
+//	if (cut_tf_value == true)
+//		cut_tf_value = false;
+//	else
+//		cut_tf_value = true;
+//}
+
+//тестовый слот для кнопки кат ver_2
 void MyWindow::cutVision()
-{	
-	//pactCut->setVisible(false);//hide cut on right menu
-	cutitem_left->setHidden(cut_tf_value);//hide cut on left menu
+{
+	pactCut->setVisible(cut_tf_value);//hide cut on right menu
+	//cutitem_left->setHidden(cut_tf_value);//hide cut on left menu
 	//возможность скрыть и показать объект по клику Cut
 	if (cut_tf_value == true)
 		cut_tf_value = false;
 	else
 		cut_tf_value = true;
 }
-
+//void MyWindow::cutSignal()
+//{
+//	listing_left->QListWidget::itemChanged(cutitem_left);
+//}
 void MyWindow::more_Window()
 {
 	moreWgt->setVisible(more_tf_value);
