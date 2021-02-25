@@ -19,6 +19,8 @@ class MyWindow : public QDialog
 public:
 	MyWindow(QWidget *parent = 0);
 	virtual ~MyWindow();
+
+private:
 	//splitter as main frame
 	QSplitter* splitter;
 	//left layer
@@ -27,8 +29,6 @@ public:
 	QListWidgetItem* pasteitem_left;
 	QListWidgetItem* deleteitem_left;
 	QListWidgetItem* more_item_left;
-
-private:
 	//wdgts
 	QListWidget* listing_left;
 	QWidget* leftWgt;
@@ -46,24 +46,23 @@ private:
 	QAction* pactPaste;
 	QAction* pactDelete;
 	QAction* pactMore;
+	//Actions(moremenu)
+	QAction* moreCopy;
+	QAction* moreCut;
+	QAction* morePaste;
+	QAction* moreDelete;
+
 	//Layouts
 	QVBoxLayout* leftWgt_layout;
-	QVBoxLayout* menuWgt_layout;
+	QHBoxLayout* menuWgt_layout;
 	QVBoxLayout* more_layout;
 	//changing true - false
-	bool cut_tf_value = false;
-	bool more_tf_value = true;
+	
 private slots:
-	void cutVision();
-	void more_Window();
-	void more_add_del();
+	void cutVision(QListWidgetItem *item);
+	void buttonPosUp();
+	void buttonPosDown();
 //signals:
-//	void cutSignal();
-//private slots:
-//	void UpClicked();
-//	void DownClicked();
 };
 
-
-//void MyWindow::copyClicked(){ exit(0); }
 #endif

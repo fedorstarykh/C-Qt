@@ -13,4 +13,5 @@ int main(int argc, char** argv)
     std::unique_ptr<MyWindow> window( new MyWindow());
     //window->show();
     return app.exec();
+
 }
