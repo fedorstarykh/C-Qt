@@ -1,6 +1,6 @@
 #include "MyWindow.h"
-#include "sigsnslots.h"
-#include"closeEvent.h"
+#include "closeEvent.h"
+#include "MyAction.h"
 #include <QList>
 #include <QtWidgets>
 #include <QSplitter>
@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QMetaObject>
 #include <iostream>
+#include <QCloseEvent>
 
 MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 {
@@ -18,54 +19,56 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	QString sDown = QString::fromStdWString(strdown);
 	up = new QPushButton(sUp);
 	down = new QPushButton(sDown);
+
 	//menu
 	menu = new QMenu;
 	moremenu = new QMenu;
+
 	//for left layer
-	copyitem_left = new QListWidgetItem;
-	cutitem_left = new QListWidgetItem;
-	pasteitem_left = new QListWidgetItem;
-	deleteitem_left = new QListWidgetItem;
-	more_item_left = new QListWidgetItem;
+	copyItemLeft = new QListWidgetItem;
+	cutItemLeft = new QListWidgetItem;
+	pasteItemLeft = new QListWidgetItem;
+	deleteItemLeft = new QListWidgetItem;
+
 	//layouts
-	leftWgt_layout = new QVBoxLayout(this);
-	menuWgt_layout = new QHBoxLayout(this);
-	more_layout = new QVBoxLayout(this);
+	leftWgtLayout = new QVBoxLayout(this);
+	menuWgtLayout = new QHBoxLayout(this);
+	moreLayout = new QVBoxLayout(this);
+
 	//Widgets
-	listing_left = new QListWidget(this);
+	listingLeft = new QListWidget(this);
 	leftWgt = new QWidget(this);
 	menuWgt = new QWidget(this);
 	moreWgt = new QWidget(this);
 
 	//setting texts for left menu
-	copyitem_left->setText(QStringLiteral("Копировать"));
-	cutitem_left->setText(QStringLiteral("Вырезать"));
-	pasteitem_left->setText(QStringLiteral("Вставить"));
-	deleteitem_left->setText(QStringLiteral("Удалить"));
-	more_item_left->setText(QStringLiteral("Ещё"));
+	copyItemLeft->setText(QStringLiteral("Копировать"));
+	cutItemLeft->setText(QStringLiteral("Вырезать"));
+	pasteItemLeft->setText(QStringLiteral("Вставить"));
+	deleteItemLeft->setText(QStringLiteral("Удалить"));
+
 	//all pos checked
-	copyitem_left->setCheckState(Qt::Checked);
-	cutitem_left->setCheckState(Qt::Checked);
-	pasteitem_left->setCheckState(Qt::Checked);
-	deleteitem_left->setCheckState(Qt::Checked);
+	copyItemLeft->setCheckState(Qt::Checked);
+	cutItemLeft->setCheckState(Qt::Checked);
+	pasteItemLeft->setCheckState(Qt::Checked);
+	deleteItemLeft->setCheckState(Qt::Checked);
+
 	//inserting all items into left list
-	listing_left->insertItem(1, copyitem_left);
-	listing_left->insertItem(2, cutitem_left);
-	listing_left->insertItem(3, pasteitem_left);
-	listing_left->insertItem(4, deleteitem_left);
-	listing_left->insertItem(5, more_item_left);
+	listingLeft->insertItem(1, copyItemLeft);
+	listingLeft->insertItem(2, cutItemLeft);
+	listingLeft->insertItem(3, pasteItemLeft);
+	listingLeft->insertItem(4, deleteItemLeft);
 	
 	//positioning on left layer
-	leftWgt_layout->addWidget(listing_left);
-	leftWgt_layout->addWidget(up);
-	leftWgt_layout->addWidget(down);
-	leftWgt->setLayout(leftWgt_layout);
+	leftWgtLayout->addWidget(listingLeft);
+	leftWgtLayout->addWidget(up);
+	leftWgtLayout->addWidget(down);
+	leftWgt->setLayout(leftWgtLayout);
+
 	//positioning on menu layer
-	menuWgt_layout->addWidget(menu);
-	menuWgt_layout->addWidget(moremenu);
-	menuWgt->setLayout(menuWgt_layout);
-	//menuWgt->setWindowFlags(Qt::Tool);
-	//menuWgt->setStyleSheet(QFrame::Panel);
+	menuWgtLayout->addWidget(menu);
+	menuWgtLayout->addWidget(moremenu);
+	menuWgt->setLayout(menuWgtLayout);
 
 	//objecting actions
 	pactCopy = new QAction(this);
@@ -114,9 +117,10 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	moremenu->addAction(moreDelete);
 	moreDelete->setVisible(false);
 	
-	connect(listing_left, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(cutVision(QListWidgetItem*)));//changing moremenu 
+	connect(listingLeft, SIGNAL(itemChanged(QListWidgetItem*)), SLOT(cutVision(QListWidgetItem*)));//changing moremenu 
 	connect(up, SIGNAL(clicked()), SLOT(buttonPosUp()));//moving up
 	connect(down, SIGNAL(clicked()), SLOT(buttonPosDown()));//moving down
+
 	//min sizes
 	leftWgt->setFixedSize(QSize(150, 300));
 	menuWgt->setFixedSize(QSize(250, 300));
@@ -132,15 +136,15 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	splitter->setCollapsible(3, false);
 	//styling
 	splitter->resize(700, 700);
-	splitter->setWindowTitle(QStringLiteral("                                   Меню"));
+	splitter->setWindowTitle(QStringLiteral("\t \t \t \t Меню"));
 	menuWgt->setStyleSheet("QMenu::item:NoUpdate { background-color: white; color: #005eff; }");//white font blue text
 	splitter->show();
 }
+void QWidget::closeEvent(QCloseEvent* event)
+{
+		event->ignore();
+}
 
-//closeEvent::closeEvent(QCloseEvent* event)
-//{
-//		event->ignore();
-//}
 void MyWindow::cutVision(QListWidgetItem* item)
 {
 	
@@ -159,37 +163,41 @@ void MyWindow::cutVision(QListWidgetItem* item)
 		}
 	}
 }
-void MyWindow::buttonPosUp(/*int* row*/)
+
+void MyWindow::buttonPosUp()
 {
-	int currentRowUp = listing_left->QListWidget::currentRow();
+	int currentRowUp = listingLeft->QListWidget::currentRow();
 	if (currentRowUp > 0) 
 	{
-		QListWidgetItem tmp = *(listing_left->currentItem());
+		QListWidgetItem tmp = *(listingLeft->currentItem());
 		int upRow = currentRowUp - 1;
 
-		*(listing_left->item(currentRowUp)) = *(listing_left->item(upRow));
-		*(listing_left->item(upRow)) = tmp;
+		*(listingLeft->item(currentRowUp)) = *(listingLeft->item(upRow));
+		*(listingLeft->item(upRow)) = tmp;
 	
-		listing_left->insertItem(currentRowUp, listing_left->item(upRow));
-		listing_left->setCurrentItem(listing_left->item(upRow));
+		listingLeft->insertItem(currentRowUp, listingLeft->item(upRow));
+		listingLeft->setCurrentItem(listingLeft->item(upRow));
 	}
 }
 
 void MyWindow::buttonPosDown()
 {
-	int currentRowDown = listing_left->QListWidget::currentRow();
+	int currentRowDown = listingLeft->QListWidget::currentRow();
 	if (currentRowDown < 4)
 	{
-		QListWidgetItem tmp_2 = *(listing_left->currentItem());
+		QListWidgetItem tmp_2 = *(listingLeft->currentItem());
 		int downRow = currentRowDown + 1;
 
-		*(listing_left->item(currentRowDown)) = *(listing_left->item(downRow));
-		*(listing_left->item(downRow)) = tmp_2;
+		*(listingLeft->item(currentRowDown)) = *(listingLeft->item(downRow));
+		*(listingLeft->item(downRow)) = tmp_2;
 
-		listing_left->insertItem(currentRowDown, listing_left->item(downRow));
-		listing_left->setCurrentItem(listing_left->item(downRow));
+		listingLeft->insertItem(currentRowDown, listingLeft->item(downRow));
+		listingLeft->setCurrentItem(listingLeft->item(downRow));
 	}
+	
 }
+
+
 //destructor
 MyWindow::~MyWindow() {}
 //closeEvent::~closeEvent() {}

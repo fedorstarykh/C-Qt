@@ -32,14 +32,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Test1\Test1\main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sigsnslots.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="closeEvent.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyAction.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

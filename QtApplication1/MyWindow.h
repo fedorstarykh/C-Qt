@@ -16,21 +16,16 @@ class MyWindow : public QDialog
 {
 	Q_OBJECT
 
-public:
-	MyWindow(QWidget *parent = 0);
-	virtual ~MyWindow();
-
 private:
 	//splitter as main frame
 	QSplitter* splitter;
 	//left layer
-	QListWidgetItem* copyitem_left;
-	QListWidgetItem* cutitem_left;
-	QListWidgetItem* pasteitem_left;
-	QListWidgetItem* deleteitem_left;
-	QListWidgetItem* more_item_left;
+	QListWidgetItem* copyItemLeft;
+	QListWidgetItem* cutItemLeft;
+	QListWidgetItem* pasteItemLeft;
+	QListWidgetItem* deleteItemLeft;
 	//wdgts
-	QListWidget* listing_left;
+	QListWidget* listingLeft;
 	QWidget* leftWgt;
 	QWidget* menuWgt;
 	QWidget* moreWgt;
@@ -53,11 +48,13 @@ private:
 	QAction* moreDelete;
 
 	//Layouts
-	QVBoxLayout* leftWgt_layout;
-	QHBoxLayout* menuWgt_layout;
-	QVBoxLayout* more_layout;
-	//changing true - false
-	
+	QVBoxLayout* leftWgtLayout;
+	QHBoxLayout* menuWgtLayout;
+	QVBoxLayout* moreLayout;
+public:
+	MyWindow(QWidget* parent = 0);
+	virtual ~MyWindow();
+
 private slots:
 	void cutVision(QListWidgetItem *item);
 	void buttonPosUp();
