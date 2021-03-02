@@ -30,16 +30,19 @@
     <ClCompile Include="MyWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="menuNoClose.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sigsnslots.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="closeEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyAction.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menuNoClose.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

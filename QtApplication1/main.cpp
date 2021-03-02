@@ -6,11 +6,46 @@
 #include <QObject>
 #include "MyWindow.h"
 #include "MyAction.h"
+#include "menuNoClose.h"
 
 int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
     std::unique_ptr<MyWindow> window( new MyWindow());
+
    // window->show();
     return app.exec();
+}
+
+void MyWindow::buttonPosUp()
+{
+	int currentRowUp = listingLeft->QListWidget::currentRow();
+	if (currentRowUp > 0)
+	{
+		QListWidgetItem tmp = *(listingLeft->currentItem());
+		int upRow = currentRowUp - 1;
+
+		*(listingLeft->item(currentRowUp)) = *(listingLeft->item(upRow));
+		*(listingLeft->item(upRow)) = tmp;
+
+		listingLeft->insertItem(currentRowUp, listingLeft->item(upRow));
+		listingLeft->setCurrentItem(listingLeft->item(upRow));
+	}
+}
+
+void MyWindow::buttonPosDown()
+{
+	int currentRowDown = listingLeft->QListWidget::currentRow();
+	if (currentRowDown < 3 && currentRowDown >= 0)
+	{
+		QListWidgetItem tmp_2 = *(listingLeft->currentItem());
+		int downRow = currentRowDown + 1;
+
+		*(listingLeft->item(currentRowDown)) = *(listingLeft->item(downRow));
+		*(listingLeft->item(downRow)) = tmp_2;
+
+		listingLeft->insertItem(currentRowDown, listingLeft->item(downRow));
+		listingLeft->setCurrentItem(listingLeft->item(downRow));
+	}
+
 }
