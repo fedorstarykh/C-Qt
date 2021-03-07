@@ -15,6 +15,7 @@
 class MyWindow : public QDialog
 {
 	Q_OBJECT
+		//friend MyAction;
 
 public:
 	MyWindow(QWidget* parent = 0);
@@ -45,7 +46,7 @@ private:
 	QAction* pactPaste;
 	QAction* pactDelete;
 	QAction* pactMore;
-	////Actions(moremenu)
+	//Actions(moremenu)
 	QAction* moreCopy;
 	QAction* moreCut;
 	QAction* morePaste;

@@ -1,7 +1,3 @@
-#include "MyWindow.h"
-#include "closeEvent.h"
-#include "menuNoClose.h"
-#include "MyAction.h"
 #include <QList>
 #include <QtWidgets>
 #include <QSplitter>
@@ -11,6 +7,10 @@
 #include <QMetaObject>
 #include <iostream>
 #include <QCloseEvent>
+#include "MyWindow.h"
+#include "closeEvent.h"
+#include "menuNoClose.h"
+#include "MyAction.h"
 
 //void QWidget::closeEvent(QCloseEvent* event)
 //{

@@ -1,17 +1,18 @@
-#ifndef MYACTION_H
-#define MYACTION_H
-#include <QAction>
-
+//#ifndef MYACTION_H
+//#define MYACTION_H
+//#include <QAction>
+//
 //class MyAction : public QAction
 //{
 //	Q_OBJECT
+//	friend MyWindow;
 //
 //public:
 //	//MyAction()
 //	//{
 //	//	//name = new QAction(this);
 //	//	string name.setText(QStringLiteral("Копировать"))
-//	//}
+//	//}	
 //
 //private:
 //	//Actions(in menu)
@@ -27,5 +28,5 @@
 //	QAction* moreDelete;
 //
 //};
-
-#endif
+//
+//#endif

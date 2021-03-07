@@ -38,11 +38,11 @@
     <ClInclude Include="closeEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MyAction.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="menuNoClose.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyAction.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
