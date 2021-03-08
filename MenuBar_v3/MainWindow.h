@@ -12,18 +12,20 @@
 #include <QTableWidget>
 #include <QListWidget>
 
+class MyAction;
 class MainWindow : public QDialog
 {
 	Q_OBJECT
-
 public:
+	friend MyAction;
+
 	MainWindow(QWidget* parent = 0);
 	~MainWindow();
 
-	void setLeftItem(int leftitemid, QString leftitemname);
-	QString getLeftItemName();
+	//void setLeftItem(int leftitemid, QString leftitemname);
+	//QString getLeftItemName();
 
-	int getLeftItemId();
+	//int getLeftItemId();
 private:
 	//splitter as main frame
 	QSplitter* splitter;
@@ -32,14 +34,12 @@ private:
 	QListWidgetItem* leftItem;
 	QString leftItemName;
 	int leftItemId;
-
+	
 	//wdgts
 	QListWidget* listingLeft;
 	QWidget* leftWgt;
 	QWidget* menuWgt;
-	//menu for right part
-	QMenu* menu;
-	QMenu* moreMenu;
+
 	//buttons
 	QPushButton* upBtn;
 	QPushButton* downBtn;

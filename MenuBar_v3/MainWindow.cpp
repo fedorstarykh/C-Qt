@@ -26,8 +26,8 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent)
 
 	//menu
 	splitter = new QSplitter(Qt::Horizontal);
-	menu = new QMenu;
-	moreMenu = new QMenu;
+	
+	//moreMenu = new QMenu;
 
 	//for left layer
 	leftItem = new QListWidgetItem;
@@ -48,8 +48,8 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent)
 	leftWgt->setLayout(leftWgtLayout);
 
 	//positioning on menu layer
-	menuWgtLayout->addWidget(menu);
-	menuWgtLayout->addWidget(moreMenu);
+	//menuWgtLayout->addWidget(menu);
+//	menuWgtLayout->addWidget(moreMenu);
 	//menuWgtLayout->setMargin(0);
 	menuWgtLayout->setContentsMargins(QMargins(0, 8, 10, 10));
 	menuWgtLayout->setSpacing(0);
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent)
 	//min sizes
 	leftWgt->setFixedSize(QSize(150, 300));
 	menuWgt->setFixedSize(QSize(250, 300));
-	moreMenu->setFixedSize(QSize(130, 150));
+	//moreMenu->setFixedSize(QSize(130, 150));
 	//menuWgt->QFrame::NoFrame;
 	leftWgt->setStyleSheet("color: #005eff;");//blue text
 	splitter->addWidget(leftWgt);
@@ -66,24 +66,28 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent)
 	splitter->show();
 }
 
-//setting leftitem
-void MainWindow::setLeftItem(int leftitemid, QString leftitemname)
-{
-	leftItemId = leftitemid;
-	leftItem->setText(leftitemname);
-	leftItem->setCheckState(Qt::Checked);
-	listingLeft->insertItem(1, leftItem);
-}
-//left item name getter
-QString MainWindow::getLeftItemName()
-{
-	return leftItemName;
-}
-//left item id getter
-int MainWindow::getLeftItemId()
-{
-	return leftItemId;
-}
+////setting leftitem
+//void MainWindow::setLeftItem(int leftitemid, QString leftitemname)
+//{	int counterForPos = 0;
+//	for (int i = 0; i > 0; i++)
+//	{
+//		counterForPos++;
+//		leftItemId = leftitemid;
+//		leftItem->setText(leftitemname);
+//		leftItem->setCheckState(Qt::Checked);
+//		listingLeft->insertItem(counterForPos, leftItem);
+//	}
+//}
+////left item name getter
+//QString MainWindow::getLeftItemName()
+//{
+//	return leftItemName;
+//}
+////left item id getter
+//int MainWindow::getLeftItemId()
+//{
+//	return leftItemId;
+//}
 MainWindow::~MainWindow()
 {
 
