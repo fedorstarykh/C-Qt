@@ -21,31 +21,30 @@ public:
 
 	MainWindow(QWidget* parent = 0);
 	~MainWindow();
-
-	//void setLeftItem(int leftitemid, QString leftitemname);
+	void ListingLeft(int leftitemid, QString leftitemname);
 	//QString getLeftItemName();
-
+	//QSplitter getSplitter(QSplitter* Splitter);
 	//int getLeftItemId();
 private:
-	//splitter as main frame
-	QSplitter* splitter;
 
+		//splitter as main frame
+	//QSplitter* splitter;
 	//left layer
 	QListWidgetItem* leftItem;
 	QString leftItemName;
 	int leftItemId;
 	
 	//wdgts
-	QListWidget* listingLeft;
-	QWidget* leftWgt;
-	QWidget* menuWgt;
+	//QListWidget* listingLeft;
+	//QWidget* leftWgt;
+	//QWidget* menuWgt;
 
 	//buttons
 	QPushButton* upBtn;
 	QPushButton* downBtn;
 	//Layouts
-	QVBoxLayout* leftWgtLayout;
-	QHBoxLayout* menuWgtLayout;
+	//QVBoxLayout* leftWgtLayout;
+	//QHBoxLayout* menuWgtLayout;
 	//string
 	QString* sRight;
 	QString* sUp;

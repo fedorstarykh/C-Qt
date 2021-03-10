@@ -43,8 +43,10 @@
     <QtMoc Include="MainWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="ListingLeft.h">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ListingLeft.h">
       <Filter>Header Files</Filter>
-    </QtMoc>
+    </ClInclude>
   </ItemGroup>
 </Project>

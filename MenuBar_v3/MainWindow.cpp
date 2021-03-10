@@ -24,47 +24,50 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent)
 	upBtn->setToolTip(QStringLiteral("Переместить выше"));
 	downBtn->setToolTip(QStringLiteral("Переместить ниже"));
 
+
 	//menu
-	splitter = new QSplitter(Qt::Horizontal);
-	
+	//splitter = new QSplitter(Qt::Horizontal);
+
 	//moreMenu = new QMenu;
 
 	//for left layer
-	leftItem = new QListWidgetItem;
+	//leftItem = new QListWidgetItem;
 
-	//layouts
-	leftWgtLayout = new QVBoxLayout(this);
-	menuWgtLayout = new QHBoxLayout(this);
+	////layouts
+	//leftWgtLayout = new QVBoxLayout();
+	//menuWgtLayout = new QHBoxLayout();
 
-	//Widgets
-	listingLeft = new QListWidget(this);
-	leftWgt = new QWidget(this);
-	menuWgt = new QWidget(this);
+	////Widgets
+	//listingLeft = new QListWidget();
+	//leftWgt = new QWidget();
+	//menuWgt = new QWidget();
 
-	//positioning on left layer
-	leftWgtLayout->addWidget(listingLeft);
-	leftWgtLayout->addWidget(upBtn);
-	leftWgtLayout->addWidget(downBtn);
-	leftWgt->setLayout(leftWgtLayout);
+	////positioning on left layer
+	//leftWgtLayout->addWidget(listingLeft);
+	//leftWgtLayout->addWidget(upBtn);
+	//leftWgtLayout->addWidget(downBtn);
+	//leftWgt->setLayout(leftWgtLayout);
+	//menuWgt->setLayout(menuWgtLayout);
 
-	//positioning on menu layer
-	//menuWgtLayout->addWidget(menu);
-//	menuWgtLayout->addWidget(moreMenu);
-	//menuWgtLayout->setMargin(0);
-	menuWgtLayout->setContentsMargins(QMargins(0, 8, 10, 10));
-	menuWgtLayout->setSpacing(0);
-	menuWgt->setLayout(menuWgtLayout);
-
-	//min sizes
-	leftWgt->setFixedSize(QSize(150, 300));
-	menuWgt->setFixedSize(QSize(250, 300));
-	//moreMenu->setFixedSize(QSize(130, 150));
-	//menuWgt->QFrame::NoFrame;
-	leftWgt->setStyleSheet("color: #005eff;");//blue text
-	splitter->addWidget(leftWgt);
-	splitter->addWidget(menuWgt);
-	splitter->show();
+	////moreMenu->setFixedSize(QSize(130, 150));
+	////menuWgt->QFrame::NoFrame;
+	//leftWgt->setStyleSheet("color: #005eff;");//blue text
+	//splitter->addWidget(leftWgt);
+	//splitter->addWidget(menuWgt);
+	//splitter->show();
 }
+void MainWindow::ListingLeft(int leftitemid, QString leftitemname)
+{
+	
+	leftItemId = leftitemid;
+	leftItem->setText(leftitemname);
+	leftItem->setCheckState(Qt::Checked);
+	
+}
+//QSplitter MainWindow::getSplitter(QSplitter* Splitter)
+//{
+//	 splitter = Splitter;
+//}
 
 ////setting leftitem
 //void MainWindow::setLeftItem(int leftitemid, QString leftitemname)
@@ -83,7 +86,7 @@ MainWindow::MainWindow(QWidget* parent) : QDialog(parent)
 //{
 //	return leftItemName;
 //}
-////left item id getter
+//////left item id getter
 //int MainWindow::getLeftItemId()
 //{
 //	return leftItemId;

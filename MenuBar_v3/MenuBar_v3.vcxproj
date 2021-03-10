@@ -96,7 +96,7 @@
     <QtMoc Include="MyAction.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="ListingLeft.h" />
+    <ClInclude Include="ListingLeft.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
