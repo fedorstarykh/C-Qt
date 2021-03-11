@@ -1,32 +1,28 @@
 //#ifndef MYACTION_H
 //#define MYACTION_H
 //#include <QAction>
+//#include <iostream>
 //
-//class MyAction : public QAction
+////class MyWindow;
+//class MyAction : public QAction, public MyWindow
 //{
 //	Q_OBJECT
+//public:
 //	friend MyWindow;
 //
-//public:
-//	//MyAction()
-//	//{
-//	//	//name = new QAction(this);
-//	//	string name.setText(QStringLiteral("Копировать"))
-//	//}	
-//
+//	MyAction(int menuactid, QString menuactname, QString menuacttext = "unsigned");
+//	~MyAction();
+//	int getMenuActId();
+//	QString getMenuActName();
 //private:
-//	//Actions(in menu)
-//	QAction* pactCopy;
-//	QAction* pactCut;
-//	QAction* pactPaste;
-//	QAction* pactDelete;
-//	QAction* pactMore;
-//	//Actions(moremenu)
-//	QAction* moreCopy;
-//	QAction* moreCut;
-//	QAction* morePaste;
-//	QAction* moreDelete;
-//
+//	QAction* menuAct;
+//	QAction* moreAct;
+//	int menuActId;
+//	int moreActId;
+//	QString menuActName;
+//	//menu for right part
+//	QMenu* menu;
+//	//QMenu* moreMenu;
 //};
 //
 //#endif

@@ -11,18 +11,22 @@
 #include <QMenuBar>
 #include <QTableWidget>
 #include <QListWidget>
-
+#include <QSettings>
+class MyAction;
 class MyWindow : public QDialog
 {
 	Q_OBJECT
-		//friend MyAction;
+		friend MyAction;
 
 public:
-	MyWindow(QWidget* parent = 0);
+	MyWindow(QWidget* parent = 0, QString name = QStringLiteral("Μενώ"));
 	virtual ~MyWindow();
-protected:
+	//funcs for process latest process saving/loading
+	void loadSettings();
+	void saveSettings();
 	
 private:
+	QSettings* settings;
 	//splitter as main frame
 	QSplitter* splitter;
 	//left layer
@@ -61,13 +65,12 @@ private:
 	QString*	 sDown;
 	bool repeatable = false;
 	
-
 private slots:
 	void cutVision(QListWidgetItem *item);
 	void buttonPosUp();
 	void buttonPosDown();
 	void moreShowList();
-//signals:
+
 };
 
 #endif

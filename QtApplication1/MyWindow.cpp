@@ -7,16 +7,14 @@
 #include <QMetaObject>
 #include <iostream>
 #include <QCloseEvent>
+#include <QSettings>
 #include "MyWindow.h"
 #include "closeEvent.h"
 #include "menuNoClose.h"
 #include "MyAction.h"
 
-//void QWidget::closeEvent(QCloseEvent* event)
-//{
-//	event->ignore();
-//}
-MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
+MyWindow::MyWindow(QWidget* parent, QString name) :
+	QDialog(parent)
 {
 	std::wstring strUp    = L"\u25b2";//arrow up
 	std::wstring strDown  = L"\u25bc";//arrow down
@@ -29,6 +27,7 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	QString sDown  = QString::fromStdWString(strDown);
 	up             = new QPushButton(sUp);
 	down           = new QPushButton(sDown);
+
 
 
 	//menu
@@ -56,6 +55,11 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	pactPaste = new QAction(this);
 	pactDelete = new QAction(this);
 	pactMore = new QAction(this);
+	//settings
+	settings = new QSettings("ORG", "MyProgram", this);
+	splitter->setObjectName(name);
+	splitter->setWindowTitle(name);
+	loadSettings();
 
 	//setting texts for left menu
 	copyItemLeft  ->setText(QStringLiteral("Копировать"));
@@ -84,13 +88,10 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	//positioning on menu layer
 	menuWgtLayout->addWidget(menu);
 	menuWgtLayout->addWidget(moremenu);
-	//menuWgtLayout->setMargin(0);
 	menuWgtLayout->setContentsMargins(QMargins(0, 8, 10, 10));
 	menuWgtLayout->setSpacing(0);
 	menuWgt		 ->setLayout(menuWgtLayout);
-	/*moremenu  ->frameGeometry();
-	moremenu->x();
-	moremenu->y();*/
+
 	//naming menu points on right part
 	pactCopy	->setText(QStringLiteral("Копировать"));
 	pactCut		->setText(QStringLiteral("Вырезать"));
@@ -108,8 +109,8 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	menu	->addAction(pactDelete);
 	menu	->addSeparator();
 	menu	->addAction(pactMore);
+	
 
-	//QMenu menu{ border: 1px solid black; };
 	moreCopy = new QAction(this);
 	moreCopy->setText(QStringLiteral("Копировать"));
 	moremenu->addAction(moreCopy);
@@ -142,16 +143,14 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	down->setCursor(curPointing);
 	up->setToolTip(QStringLiteral("Переместить выше"));
 	down->setToolTip(QStringLiteral("Переместить ниже"));
-
-	QFrame *frm = new QFrame;
-	frm->setFrameStyle(QFrame:: Raised);
-	frm->setLineWidth(10);
-	moremenu->setGeometry(10, 35, 50, 20);
 	
 	//min sizes
-	leftWgt		->setFixedSize(QSize(150, 300));
+	
+	/*
 	menuWgt		->setFixedSize(QSize(250, 300));
+	leftWgt		->setFixedSize(QSize(150, 300));
 	moremenu	->setFixedSize(QSize(130, 150));
+	*/
 	//menuWgt->QFrame::NoFrame;
 	leftWgt		->setStyleSheet("color: #005eff;");//blue text
 	splitter	->addWidget(leftWgt);
@@ -162,22 +161,54 @@ MyWindow::MyWindow(QWidget* parent) : QDialog(parent)
 	splitter	->setCollapsible(1, false);
 	splitter	->setCollapsible(2, false);
 	splitter	->setCollapsible(3, false);
+
 	//styling
-	
 	menu->setStyleSheet("QMenu{ width: 100px; border-left: 1px solid black;}");
 	moremenu->setStyleSheet("QMenu{border-left: 0px solid black; border-bottom: 1px solid black; border-right: 1px solid black;}}");
 
-
 	moremenu->  setVisible(repeatable);
-	splitter	->resize(700, 700);
-	splitter	->setWindowTitle(QStringLiteral(" Меню"));
-	//menuWgt		->setStyleSheet("QMenu::item:hovered { color: #005eff; }");//white font blue text
+	//splitter	->resize(700, 700);
+	//splitter	->setWindowTitle(QStringLiteral("Меню"));
 	splitter	->show();
+	QCoreApplication::setOrganizationName("ORG");
+	QCoreApplication::setApplicationName("MyProgram");
+	
+	//settings.setValue();
+
+
+}
+void MyWindow::saveSettings()
+{
+	settings->beginGroup("listsave");
+	settings->beginGroup(objectName());
+	//saving qlistwidget item
+	copyItemLeft->setFlags(copyItemLeft->flags() | Qt::ItemIsUserCheckable);
+	bool checked = settings->value("checked").toBool();
+	//copyItemLeft->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
+
+	settings->setValue("geometry", splitter->geometry());
+	settings->endGroup();
+	settings->endGroup();
+}
+void MyWindow::loadSettings()
+{
+	settings->beginGroup("listsave");
+	settings->beginGroup(objectName());
+	// loading qlist widget item
+	//copyItemLeft->setFlags(copyItemLeft->flags() | Qt::ItemIsUserCheckable);
+	//settings->setValue("checked",);
+	//copyItemLeft->setCheckState( Qt::Unchecked);
+
+	//settings->setValue("cil", setCheckState(Qt::Checked));
+	splitter->setGeometry(settings->value("geometry", QRect(200, 200, 300, 300)).toRect());//loading last pos of window
+	settings->endGroup();
+	settings->endGroup();
 }
 void QWidget::closeEvent(QCloseEvent* event)
 {
-	event->ignore();
+	event->accept();
 }
+
 void MyWindow::cutVision(QListWidgetItem* item)
 {
 
@@ -206,7 +237,10 @@ void MyWindow::moreShowList()
 	moremenu->setVisible(repeatable);
 }
 //destructor
-MyWindow::~MyWindow() {}
+MyWindow::~MyWindow()
+{
+	saveSettings();
+}
 //MenuNoClose::~MenuNoClose() {}
 
 //closeEvent::~closeEvent() {}

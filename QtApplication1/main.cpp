@@ -4,16 +4,27 @@
 #include <QAction>
 #include <QMenuBar>
 #include <QObject>
+#include <QSettings>
 #include "MyWindow.h"
-#include "MyAction.h"
 #include "menuNoClose.h"
+#include "MyAction.h"
 
 int main(int argc, char** argv)
 {
+	
     QApplication app(argc, argv);
     std::unique_ptr<MyWindow> window( new MyWindow());
 
-   // window->show();
+	//MyAction Copy(1, "Copy", "Copy");
+	//MyAction Cut(2, "Cut", "Cut");
+	//MyAction Paste(3, "Paste", "Paste");
+	//MyAction Delete(4, "Delete", "Delete");
+	
+
+	//settings.setValue("/Settings/StringKey", "String Value");
+	//settings.setValue("/Settings/IntegerKey", 213);
+	//settings.setValue("/Settings/BooleanKey", true);
+    //window->show();
     return app.exec();
 }
 
