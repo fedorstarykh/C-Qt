@@ -3,19 +3,18 @@
 #include <QAction>
 #include <iostream>
 using namespace std;
-class MainWindow;
-class MyAction : public QAction
+//class MainWindow;
+class MyAction : public QAction, public MainWindow
 {
-
 	Q_OBJECT
 public:
-	friend MainWindow;
+	//friend MainWindow;
 
 	MyAction(int menuactid, QString menuactname, QString menuacttext = "unsigned");
 	~MyAction();
 	int getMenuActId();
 	QString getMenuActName();
-private:
+protected:
 	QAction* menuAct;
 	QAction* moreAct;
 	int menuActId;
@@ -24,6 +23,8 @@ private:
 	//menu for right part
 	QMenu* menu;
 	QMenu* moreMenu;
+private:
+
 };
 
 #endif

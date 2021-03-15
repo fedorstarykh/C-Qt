@@ -9,7 +9,6 @@ int main(int argc, char** argv)
     QApplication app(argc, argv);
     std::unique_ptr<MainWindow> window(new MainWindow());
      // window->show();
-    
     //adding actions with Act_Constructor
     //id, name, text
     MyAction Copy(1, "Copy", "Copy");

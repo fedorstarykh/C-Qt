@@ -49,7 +49,7 @@ private:
 	QString* sRight;
 	QString* sUp;
 	QString* sDown;
-private slots:
+
 };
 
 #endif
