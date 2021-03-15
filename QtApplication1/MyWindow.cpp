@@ -27,9 +27,7 @@ MyWindow::MyWindow(QWidget* parent, QString name) :
 	QString sDown  = QString::fromStdWString(strDown);
 	up             = new QPushButton(sUp);
 	down           = new QPushButton(sDown);
-
-
-
+	 
 	//menu
 	splitter = new QSplitter(Qt::Horizontal);
 	menu     = new QMenu;
@@ -66,12 +64,6 @@ MyWindow::MyWindow(QWidget* parent, QString name) :
 	cutItemLeft   ->setText(QStringLiteral("Вырезать"));
 	pasteItemLeft ->setText(QStringLiteral("Вставить"));
 	deleteItemLeft->setText(QStringLiteral("Удалить"));
-
-	//all pos checked
-	copyItemLeft	->setCheckState(Qt::Checked);
-	cutItemLeft		->setCheckState(Qt::Checked);
-	pasteItemLeft	->setCheckState(Qt::Checked);
-	deleteItemLeft	->setCheckState(Qt::Checked);
 
 	//inserting all items into left list
 	listingLeft	->insertItem(1, copyItemLeft);
@@ -145,13 +137,10 @@ MyWindow::MyWindow(QWidget* parent, QString name) :
 	down->setToolTip(QStringLiteral("Переместить ниже"));
 	
 	//min sizes
-	
-	/*
-	menuWgt		->setFixedSize(QSize(250, 300));
+	//menuWgt		->setFixedSize(QSize(250, 300));
+	//moremenu	->setFixedSize(QSize(130, 150));
+
 	leftWgt		->setFixedSize(QSize(150, 300));
-	moremenu	->setFixedSize(QSize(130, 150));
-	*/
-	//menuWgt->QFrame::NoFrame;
 	leftWgt		->setStyleSheet("color: #005eff;");//blue text
 	splitter	->addWidget(leftWgt);
 	splitter	->addWidget(menuWgt);
@@ -174,18 +163,18 @@ MyWindow::MyWindow(QWidget* parent, QString name) :
 	QCoreApplication::setApplicationName("MyProgram");
 	
 	//settings.setValue();
-
-
 }
 void MyWindow::saveSettings()
 {
 	settings->beginGroup("listsave");
 	settings->beginGroup(objectName());
 	//saving qlistwidget item
-	copyItemLeft->setFlags(copyItemLeft->flags() | Qt::ItemIsUserCheckable);
-	bool checked = settings->value("checked").toBool();
-	//copyItemLeft->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
+	settings->setValue("coil", (int)copyItemLeft->checkState());
+	settings->setValue("cuil", (int)cutItemLeft->checkState());
+	settings->setValue("pil", (int)pasteItemLeft->checkState());
+	settings->setValue("dil", (int)deleteItemLeft->checkState());
 
+	//geom saving
 	settings->setValue("geometry", splitter->geometry());
 	settings->endGroup();
 	settings->endGroup();
@@ -194,12 +183,14 @@ void MyWindow::loadSettings()
 {
 	settings->beginGroup("listsave");
 	settings->beginGroup(objectName());
-	// loading qlist widget item
-	//copyItemLeft->setFlags(copyItemLeft->flags() | Qt::ItemIsUserCheckable);
-	//settings->setValue("checked",);
-	//copyItemLeft->setCheckState( Qt::Unchecked);
 
-	//settings->setValue("cil", setCheckState(Qt::Checked));
+	// loading qlist widget item
+	copyItemLeft->setCheckState((Qt::CheckState)settings->value("coil", 1).toInt());
+	cutItemLeft->setCheckState((Qt::CheckState)settings->value("cuil", 1).toInt());
+	pasteItemLeft->setCheckState((Qt::CheckState)settings->value("pil", 1).toInt());
+	deleteItemLeft->setCheckState((Qt::CheckState)settings->value("dil", 1).toInt());
+
+	//geom load
 	splitter->setGeometry(settings->value("geometry", QRect(200, 200, 300, 300)).toRect());//loading last pos of window
 	settings->endGroup();
 	settings->endGroup();
