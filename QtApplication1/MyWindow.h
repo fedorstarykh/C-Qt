@@ -12,64 +12,43 @@
 #include <QTableWidget>
 #include <QListWidget>
 #include <QSettings>
-class MyAction;
+
 class MyWindow : public QDialog
 {
-	Q_OBJECT
-		friend MyAction;
+	Q_OBJECT	
 
 public:
-	MyWindow(QWidget* parent = 0, QString name = QStringLiteral("Меню"));
-	virtual ~MyWindow();
-	//funcs for process latest process saving/loading
-	void loadSettings();
-	void saveSettings();
-	
+	MyWindow(QList<QAction*> actions, QWidget* parent = 0, QString name = QStringLiteral("Меню"));
+
+	bool	load(const QByteArray& data);
+	QByteArray	save()const;
+
+protected:
+	bool eventFilter(QObject* watched, QEvent* event) final;
+
 private:
-	QSettings* settings;
-	//splitter as main frame
-	QSplitter* splitter;
-	//left layer
-	QListWidgetItem* copyItemLeft;
-	QListWidgetItem* cutItemLeft;
-	QListWidgetItem* pasteItemLeft;
-	QListWidgetItem* deleteItemLeft;
-	//wdgts
+	void checkBoxSave(QString name, QListWidgetItem*item);
+	void checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue);
+
+	QList<QAction*> _actions;
+
 	QListWidget* listingLeft;
-	QWidget*	 leftWgt;
-	QWidget*	 menuWgt;
-	//menu for right part
+
+	QSettings* settings;
+	//splitter + menu
+	QSplitter* splitter;
 	QMenu* menu;
 	QMenu* moremenu;
-	//buttons
-	QPushButton* up;
-	QPushButton* down; 
-	//Actions(in menu)
-	QAction* pactCopy;
-	QAction* pactCut;
-	QAction* pactPaste;
-	QAction* pactDelete;
-	QAction* pactMore;
-	//Actions(moremenu)
-	QAction* moreCopy;
-	QAction* moreCut;
-	QAction* morePaste;
-	QAction* moreDelete;
+	
+	QString strMore = (QStringLiteral("Дополнительно "));
 
-	//Layouts
-	QVBoxLayout* leftWgtLayout;
-	QHBoxLayout* menuWgtLayout;
-	//string
-	QString*	 sRight;
-	QString*	 sUp;
-	QString*	 sDown;
-	bool repeatable = false;
+	bool repeatable {false};
 	
 private slots:
-	void cutVision(QListWidgetItem *item);
+	void moreMenuVision(QListWidgetItem *item);
+	void moreShowList();
 	void buttonPosUp();
 	void buttonPosDown();
-	void moreShowList();
 
 };
 
