@@ -118,7 +118,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	//styling
 	//menu->setStyleSheet("QMenu{ width: 100px; border-left: 1px solid black;}");
 	//moremenu->setStyleSheet("QMenu{border-left: 0px solid black; border-bottom: 1px solid black; border-right: 1px solid black;}}");
-	//leftWgt		->setStyleSheet("color: #005eff;");//blue text
+	//leftWgt->setStyleSheet("color: #005eff;");//blue text
 
 	QCoreApplication::setOrganizationName("ORG");
 	QCoreApplication::setApplicationName(QStringLiteral("Μενώ"));
@@ -233,8 +233,4 @@ void MyWindow::buttonPosDown()
 		listingLeft->insertItem(currentRowDown, listingLeft->item(downRow));
 		listingLeft->setCurrentItem(listingLeft->item(downRow));
 	}
-
 }
-
-//MenuNoClose::~MenuNoClose() {}
-//closeEvent::~closeEvent() {}

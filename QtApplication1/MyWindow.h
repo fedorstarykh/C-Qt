@@ -46,7 +46,7 @@ private:
 	
 private slots:
 	void moreMenuVision(QListWidgetItem *item);
-	void moreShowList();
+	void moreShowList();//unused + no need
 	void buttonPosUp();
 	void buttonPosDown();
 
