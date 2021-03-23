@@ -29,6 +29,6 @@ int main(int argc, char** argv)
 	int res = app.exec();
 	auto state = window.save();
 	sett.setValue("Settings", state);
-
+	
     return res;
 }

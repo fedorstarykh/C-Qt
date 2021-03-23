@@ -24,7 +24,9 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	QString sDown  = QString::fromStdWString(strDown);
 	QPushButton* up		= new QPushButton(sUp);
 	QPushButton* down	= new QPushButton(sDown);
-	 
+
+	QPushButton* addSep = new QPushButton;
+	addSep->setText(QStringLiteral("Добавить разделитель"));
 	//menu
 	splitter = new QSplitter(Qt::Horizontal);
 	
@@ -48,6 +50,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		auto itemm = new QAction;
 		itemm->setText(actm->text());
 		menu->addAction(itemm);
+		menu->addSeparator();
 		if (itemm->text().contains(strMore))
 		{
 			connect(itemm, &QAction::triggered, this, &MyWindow::moreShowList);//showing elements in moremenu
@@ -60,6 +63,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		auto itemmm = new QAction;
 		itemmm->setText(actmm->text());
 		moremenu->addAction(itemmm);
+		moremenu->addSeparator();
 		itemmm->setVisible(false);
 		if (itemmm->text().contains(strMore))
 		{
@@ -82,6 +86,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	leftWgtLayout	->addWidget(listingLeft);
 	leftWgtLayout	->addWidget(up);
 	leftWgtLayout	->addWidget(down);
+	leftWgtLayout	->addWidget(addSep);
 	leftWgt			->setLayout(leftWgtLayout);
 
 	//positioning on menu layer
@@ -97,11 +102,14 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		SLOT(moreMenuVision(QListWidgetItem*)));//changing moremenu 
 	connect(up, SIGNAL(clicked()), SLOT(buttonPosUp()));//moving up
 	connect(down, SIGNAL(clicked()), SLOT(buttonPosDown()));//moving down
-
+	connect(addSep, SIGNAL(clicked()), SLOT(sepAddingButton()));//add separator
+	connect(addSep, SIGNAL(clicked(QListWidgetItem*)), SLOT(sepCheck(QListWidgetItem*)));//add separator
+	//cursor for buttons
 	//cursor for buttons
 	QCursor curPointing(Qt::PointingHandCursor);
 	up->setCursor(curPointing);
 	down->setCursor(curPointing);
+	addSep->setCursor(curPointing);
 	up->setToolTip(QStringLiteral("Переместить выше"));
 	down->setToolTip(QStringLiteral("Переместить ниже"));
 
@@ -124,34 +132,45 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	QCoreApplication::setApplicationName(QStringLiteral("Меню"));
 	
 }
-bool MyWindow::load(const QByteArray& data)
-{
-	settings->beginGroup("listsave");
-	// loading qlist widget item
-	//checkBoxLoad(copyItemLeft, "coil", 2);
-	//checkBoxLoad(cutItemLeft, "cuil", 2);
-	//checkBoxLoad(pasteItemLeft, "pil", 2);
-	//checkBoxLoad(deleteItemLeft, "dil", 2);
-
-	//geom load
-	splitter->setGeometry(settings->value("geometry", QRect(200, 200, 300, 300)).toRect());//loading last pos of window
-	settings->endGroup();
-	return true;
-}
 QByteArray MyWindow::save() const
 {
-	settings->beginGroup("listsave");
-	//saving qlistwidget item
-	//checkBoxSave("coil", copyItemLeft);
-	//checkBoxSave("cuil", cutItemLeft);
-	//checkBoxSave("pil", pasteItemLeft);
-	//checkBoxSave("dil", deleteItemLeft);
-
+	//settings->beginGroup("listsave");
 	//geom saving
-	settings->setValue("geometry", splitter->geometry());
-	settings->endGroup();
+	//settings->setValue("geometry", splitter->geometry());
+	//settings->endGroup();
+	QMap<QString, int> savings;
+	savings["copy"] = 0;
+	savings["cut"] = 2;
+	savings["paste"] = 2;
+	savings["delete"] = 2;
 
+	QFile file("saveFile.txt");
+	if (file.open(QIODevice::WriteOnly)) 
+	{
+		QDataStream stream(&file);
+		stream.setVersion(QDataStream::Qt_5_15);
+		stream << QListWidgetItem("1") << QListWidgetItem("2")<<QListWidgetItem("3") <<QListWidgetItem("4");
+		//stream << savings;
+
+	}
+	file.close();
 	return QByteArray();
+}
+bool MyWindow::load(const QByteArray& data)
+{
+	//QMap<QString, int> savings;
+	//settings->beginGroup("listsave");
+	QFile file("saveFile.txt");
+	if (file.open(QIODevice::ReadOnly))
+	{
+		QDataStream stream(&file);
+		stream.setVersion(QDataStream::Qt_5_15);
+		//stream >> savings;
+	}
+	////geom load
+	//splitter->setGeometry(settings->value("geometry", QRect(200, 200, 300, 300)).toRect());//loading last pos of window
+	//settings->endGroup();
+	return true;
 }
 
 bool MyWindow::eventFilter(QObject* watched, QEvent* event)
@@ -163,15 +182,15 @@ bool MyWindow::eventFilter(QObject* watched, QEvent* event)
 	return false;
 }
 
-void MyWindow::checkBoxSave(QString name, QListWidgetItem *item)
-{
-	settings->setValue(name, (int)item->checkState());
-}
-
-void MyWindow::checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue)
-{
-	item->setCheckState((Qt::CheckState)settings->value(name, defaultValue).toInt());
-}
+//void MyWindow::checkBoxSave(QString name, QListWidgetItem *item)
+//{
+//	settings->setValue(name, (int)item->checkState());
+//}
+//
+//void MyWindow::checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue)
+//{
+//	item->setCheckState((Qt::CheckState)settings->value(name, defaultValue).toInt());
+//}
 
 void MyWindow::moreMenuVision(QListWidgetItem* item)
 {
@@ -204,6 +223,7 @@ void MyWindow::moreShowList()
 void MyWindow::buttonPosUp()
 {
 	int currentRowUp = listingLeft->QListWidget::currentRow();
+	
 	if (currentRowUp > 0)
 	{
 		QListWidgetItem tmp = *(listingLeft->currentItem());
@@ -214,6 +234,7 @@ void MyWindow::buttonPosUp()
 
 		listingLeft->insertItem(currentRowUp, listingLeft->item(upRow));
 		listingLeft->setCurrentItem(listingLeft->item(upRow));
+
 	}
 }
 
@@ -233,4 +254,24 @@ void MyWindow::buttonPosDown()
 		listingLeft->insertItem(currentRowDown, listingLeft->item(downRow));
 		listingLeft->setCurrentItem(listingLeft->item(downRow));
 	}
+}
+
+void MyWindow::sepAddingButton()
+{
+	//listingLeft->setStyleSheet("QListWidget::item { border-bottom: 1px solid black; }");
+	QListWidgetItem* sep = new QListWidgetItem;
+	sep->setText(sepsymbol);
+	listingLeft->addItem(sep);
+}
+
+void MyWindow::sepCheck(QListWidgetItem* separator)
+{
+	for (auto leflis : listingLeft->actions())
+	{
+		if (leflis->text().contains(separator->text()))
+		{
+			menu->addSeparator();
+		}
+	}
+	
 }

@@ -12,7 +12,7 @@
 #include <QTableWidget>
 #include <QListWidget>
 #include <QSettings>
-
+#include <QFile>
 class MyWindow : public QDialog
 {
 	Q_OBJECT	
@@ -20,28 +20,31 @@ class MyWindow : public QDialog
 public:
 	MyWindow(QList<QAction*> actions, QWidget* parent = 0, QString name = QStringLiteral("Меню"));
 
-	bool	load(const QByteArray& data);
 	QByteArray	save()const;
+	bool	load(const QByteArray& data);
 
 protected:
 	bool eventFilter(QObject* watched, QEvent* event) final;
 
 private:
-	void checkBoxSave(QString name, QListWidgetItem*item);
-	void checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue);
+	/*void checkBoxSave(QString name, QListWidgetItem*item);
+	void checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue);*/
 
 	QList<QAction*> _actions;
 
 	QListWidget* listingLeft;
-
+	
 	QSettings* settings;
+	
 	//splitter + menu
 	QSplitter* splitter;
 	QMenu* menu;
 	QMenu* moremenu;
-	
-	QString strMore = (QStringLiteral("Дополнительно "));
 
+	QString strMore = (QStringLiteral("Дополнительно "));
+	std::wstring sepstrL = L"\u2015";//	midline symbol
+	QString sepstr = QString::fromStdWString(sepstrL);
+	#define sepsymbol sepstr+sepstr+sepstr+sepstr+sepstr+sepstr+sepstr+sepstr
 	bool repeatable {false};
 	
 private slots:
@@ -49,6 +52,8 @@ private slots:
 	void moreShowList();//unused + no need
 	void buttonPosUp();
 	void buttonPosDown();
+	void sepAddingButton();
+	void sepCheck(QListWidgetItem* separator);
 
 };
 
