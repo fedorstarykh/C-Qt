@@ -138,18 +138,44 @@ QByteArray MyWindow::save() const
 	//geom saving
 	//settings->setValue("geometry", splitter->geometry());
 	//settings->endGroup();
-	QMap<QString, int> savings;
-	savings["copy"] = 0;
-	savings["cut"] = 2;
-	savings["paste"] = 2;
-	savings["delete"] = 2;
+	
 
 	QFile file("saveFile.txt");
 	if (file.open(QIODevice::WriteOnly)) 
 	{
+		
 		QDataStream stream(&file);
 		stream.setVersion(QDataStream::Qt_5_15);
-		stream << QListWidgetItem("1") << QListWidgetItem("2")<<QListWidgetItem("3") <<QListWidgetItem("4");
+		QString temp;
+		QMap<QString, int> savings;
+		int itemStatus;
+		for (int i = 0; i < listingLeft->count(); i++)
+		{
+			QListWidgetItem* item = listingLeft->item(i);
+			
+			temp = item->text() + "\n";
+
+			/*if (item->isChecked())
+			{
+				itemStatus = true;
+			}*/
+			//else itemStatus = false;
+			savings[temp] = itemStatus;
+			//stream << itemStatus;
+
+		}
+		stream << savings;
+		/*for (int i = 0; i < listingLeft->count(); i++)
+			{
+			stream << listingLeft->item(i);
+			}*/
+	/*	foreach(QListWidgetItem * item, listingLeft)
+			stream << listingLeft[i] << "\n";*/
+		//int curow = listingLeft->currentRow();
+		//for (curow = 0; curow < 4  /*listingLeft->count()*/; curow + 1)
+		//{
+		//	stream << listingLeft->currentItem();
+		//}
 		//stream << savings;
 
 	}
@@ -165,6 +191,12 @@ bool MyWindow::load(const QByteArray& data)
 	{
 		QDataStream stream(&file);
 		stream.setVersion(QDataStream::Qt_5_15);
+		QTextStream in(&file);
+
+		while (!in.atEnd()) {
+			QString line = in.readLine();
+			//listingLeft->addItem(line);//загрузка строк из файла
+		}
 		//stream >> savings;
 	}
 	////geom load

@@ -14,10 +14,10 @@ int main(int argc, char** argv)
 	
 	QList<QAction*> actions;
 	
-	actions.push_back(new QAction{ QStringLiteral("Копировать")});
-	actions.push_back(new QAction{ QStringLiteral("Вырезать") });
-	actions.push_back(new QAction{ QStringLiteral("Вставить") });
-	actions.push_back(new QAction{ QStringLiteral("Удалить") });
+	actions.push_back(new QAction{ QStringLiteral("Copy")});
+	actions.push_back(new QAction{ QStringLiteral("Cut") });
+	actions.push_back(new QAction{ QStringLiteral("Paste") });
+	actions.push_back(new QAction{ QStringLiteral("Delete") });
 
 	QSettings sett{"ORG", "MyProgram"};
 	QByteArray data = sett.value("Settings").toByteArray();
