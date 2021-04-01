@@ -10,38 +10,34 @@
 #include <QSettings>
 #include "MyWindow.h"
 
+static const QChar sepstrL{ 0x2015 };
+static QString separatorText()
+{
+	return { 10, sepstrL };
+}
+
 MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	QDialog(parent),
 	_actions{ actions },
 	splitter{ new QSplitter{this} }
 {
-	std::wstring strRight = L"\u276f";	//arrow right
-	QString sRight = QString::fromStdWString(strRight);
-	std::wstring strUp    = L"\u25b2";			//arrow up
-	std::wstring strDown  = L"\u25bc";		//arrow down
 	
-	QString sUp    = QString::fromStdWString(strUp);
-	QString sDown  = QString::fromStdWString(strDown);
-	QPushButton* up		= new QPushButton(sUp);
-	QPushButton* down	= new QPushButton(sDown);
 
-	QPushButton* addSep = new QPushButton;
+	
+
+
+	
 	addSep->setText(QStringLiteral("Добавить разделитель"));
 	//menu
 	splitter = new QSplitter(Qt::Horizontal);
-	
+
 	listingLeft = new QListWidget(this);
 	for (auto act : _actions)
 	{
-		
 		auto item = new QListWidgetItem;
 		item->setText(act->text());
 		listingLeft->addItem(item);
 		item->setCheckState(Qt::Checked);
-		if (item->text().contains(strMore))
-		{
-			item->setHidden(true);
-		}
 	}
 	menu = new QMenu;
 	menu->installEventFilter(this);
@@ -50,12 +46,12 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		auto itemm = new QAction;
 		itemm->setText(actm->text());
 		menu->addAction(itemm);
-		menu->addSeparator();
-		if (itemm->text().contains(strMore))
+		if (itemm->text().contains(QString(QStringLiteral("Дополнительно"))))
 		{
 			connect(itemm, &QAction::triggered, this, &MyWindow::moreShowList);//showing elements in moremenu
 		}
 	}
+
 	moremenu = new QMenu;
 	moremenu->installEventFilter(this);
 	for (auto actmm : _actions)
@@ -63,48 +59,46 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		auto itemmm = new QAction;
 		itemmm->setText(actmm->text());
 		moremenu->addAction(itemmm);
-		moremenu->addSeparator();
 		itemmm->setVisible(false);
-		if (itemmm->text().contains(strMore))
-		{
-			itemmm->setVisible(false);
-		}
 	}
-		
+
 	//layouts
-	QVBoxLayout*  leftWgtLayout = new QVBoxLayout(this);
-	QHBoxLayout*  menuWgtLayout = new QHBoxLayout(this);
+	QVBoxLayout* leftWgtLayout = new QVBoxLayout(this);
+	QHBoxLayout* menuWgtLayout = new QHBoxLayout(this);
 
 	//Widgets
-	QWidget* leftWgt     = new QWidget(this);
-	QWidget* menuWgt     = new QWidget(this);
+	QWidget* leftWgt = new QWidget(this);
+	QWidget* menuWgt = new QWidget(this);
 
 	//settings
 	settings = new QSettings("ORG", "MyProgram", this);
-	
+
 	//positioning on left layer
-	leftWgtLayout	->addWidget(listingLeft);
-	leftWgtLayout	->addWidget(up);
-	leftWgtLayout	->addWidget(down);
-	leftWgtLayout	->addWidget(addSep);
-	leftWgt			->setLayout(leftWgtLayout);
+	leftWgtLayout->addWidget(listingLeft);
+	leftWgtLayout->addWidget(up);
+	leftWgtLayout->addWidget(down);
+	leftWgtLayout->addWidget(addSep);
+	leftWgt->setLayout(leftWgtLayout);
 
 	//positioning on menu layer
 	menuWgtLayout->addWidget(menu);
 	menuWgtLayout->addWidget(moremenu);
 	menuWgtLayout->setSpacing(0);
-	menuWgt		 ->setLayout(menuWgtLayout);
+	menuWgt->setLayout(menuWgtLayout);
 	QAction* pactMore = new QAction;
 	pactMore->setText(QStringLiteral("Дополнительно ") + sRight);
 	menu->addAction(pactMore);
+	menu->setMinimumWidth(menu->sizeHint().width());
+	moremenu->setMinimumWidth(menu->sizeHint().width());
 
-	connect(listingLeft, SIGNAL(itemChanged(QListWidgetItem*)), 
+	connect(listingLeft, SIGNAL(itemChanged(QListWidgetItem*)),
 		SLOT(moreMenuVision(QListWidgetItem*)));//changing moremenu 
 	connect(up, SIGNAL(clicked()), SLOT(buttonPosUp()));//moving up
 	connect(down, SIGNAL(clicked()), SLOT(buttonPosDown()));//moving down
 	connect(addSep, SIGNAL(clicked()), SLOT(sepAddingButton()));//add separator
-	connect(addSep, SIGNAL(clicked(QListWidgetItem*)), SLOT(sepCheck(QListWidgetItem*)));//add separator
-	//cursor for buttons
+	connect(listingLeft, SIGNAL(itemSelectionChanged()), SLOT(sepChange()));//add separator
+	connect(listingLeft, SIGNAL(itemSelectionChanged()), SLOT(sepDisable()));//add separator
+	connect(listingLeft, SIGNAL(currentItemChanged()), SLOT(sepDisable()));
 	//cursor for buttons
 	QCursor curPointing(Qt::PointingHandCursor);
 	up->setCursor(curPointing);
@@ -113,9 +107,9 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	up->setToolTip(QStringLiteral("Переместить выше"));
 	down->setToolTip(QStringLiteral("Переместить ниже"));
 
-	leftWgt		->setFixedSize(QSize(150, 300));
-	splitter	->addWidget(leftWgt);
-	splitter	->addWidget(menuWgt);
+	//leftWgt->setFixedSize(QSize(150, 300));
+	splitter->addWidget(leftWgt);
+	splitter->addWidget(menuWgt);
 	auto layout = new QVBoxLayout{ this };
 	layout->addWidget(splitter);
 
@@ -123,85 +117,78 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	splitter->setCollapsible(0, false);
 	splitter->setCollapsible(1, false);
 
-	//styling
+	//winstyle
 	//menu->setStyleSheet("QMenu{ width: 100px; border-left: 1px solid black;}");
 	//moremenu->setStyleSheet("QMenu{border-left: 0px solid black; border-bottom: 1px solid black; border-right: 1px solid black;}}");
 	//leftWgt->setStyleSheet("color: #005eff;");//blue text
 
 	QCoreApplication::setOrganizationName("ORG");
 	QCoreApplication::setApplicationName(QStringLiteral("Меню"));
-	
+
 }
+
+struct MySaveData
+{
+	QString name;
+	int checkState;
+	bool isSeparator{ false };
+};
+
+QDataStream& operator << (QDataStream& stream, const MySaveData& data)
+{
+	stream << data.name;
+	stream << data.checkState;
+	stream << data.isSeparator;
+	return stream;
+}
+
+QDataStream& operator >>(QDataStream& stream, MySaveData& data)
+{
+	stream >> data.name;
+	stream >> data.checkState;
+	stream >> data.isSeparator;
+	return stream;
+}
+
 QByteArray MyWindow::save() const
 {
-	//settings->beginGroup("listsave");
-	//geom saving
-	//settings->setValue("geometry", splitter->geometry());
-	//settings->endGroup();
-	
-
-	QFile file("saveFile.txt");
-	if (file.open(QIODevice::WriteOnly)) 
+	QByteArray arr;
 	{
-		
-		QDataStream stream(&file);
-		stream.setVersion(QDataStream::Qt_5_15);
-		QString temp;
-		QMap<QString, int> savings;
+		QDataStream stream{ &arr, QIODevice::WriteOnly };
 		int itemStatus;
+		stream << listingLeft->count();
 		for (int i = 0; i < listingLeft->count(); i++)
 		{
 			QListWidgetItem* item = listingLeft->item(i);
-			
-			temp = item->text() + "\n";
-
-			/*if (item->isChecked())
-			{
-				itemStatus = true;
-			}*/
-			//else itemStatus = false;
-			savings[temp] = itemStatus;
-			//stream << itemStatus;
-
+			MySaveData data{ item->text(), int(item->checkState()), item->text() == separatorText() };
+			stream << data;
 		}
-		stream << savings;
-		/*for (int i = 0; i < listingLeft->count(); i++)
-			{
-			stream << listingLeft->item(i);
-			}*/
-	/*	foreach(QListWidgetItem * item, listingLeft)
-			stream << listingLeft[i] << "\n";*/
-		//int curow = listingLeft->currentRow();
-		//for (curow = 0; curow < 4  /*listingLeft->count()*/; curow + 1)
-		//{
-		//	stream << listingLeft->currentItem();
-		//}
-		//stream << savings;
-
 	}
-	file.close();
-	return QByteArray();
+	return arr;
 }
 bool MyWindow::load(const QByteArray& data)
 {
-	//QMap<QString, int> savings;
-	//settings->beginGroup("listsave");
-	QFile file("saveFile.txt");
-	if (file.open(QIODevice::ReadOnly))
-	{
-		QDataStream stream(&file);
-		stream.setVersion(QDataStream::Qt_5_15);
-		QTextStream in(&file);
+	QDataStream stream{ data };
+	int count{};
+	stream >> count;
 
-		while (!in.atEnd()) {
-			QString line = in.readLine();
-			//listingLeft->addItem(line);//загрузка строк из файла
+	MySaveData buffer;
+	for (int i = 0; i < count; i++)
+	{
+		stream >> buffer;
+		if (buffer.isSeparator)
+		{
+			listingLeft->insertItem(i, separatorText());
 		}
-		//stream >> savings;
+		auto items = listingLeft->findItems(buffer.name, Qt::MatchFlag::MatchExactly);
+		/*for (int i = 0; i < listingLeft->count(); i++)
+			QListWidgetItem* nonsep = listingLeft->item(i);*/
+			if (items.size() == 1 /*&& !nonsep->text().contains(sepstrL)*/)
+			{
+				items.front()->setCheckState(static_cast<Qt::CheckState>(buffer.checkState));
+			}
+		
 	}
-	////geom load
-	//splitter->setGeometry(settings->value("geometry", QRect(200, 200, 300, 300)).toRect());//loading last pos of window
-	//settings->endGroup();
 	return true;
 }
 
@@ -213,16 +200,6 @@ bool MyWindow::eventFilter(QObject* watched, QEvent* event)
 	}
 	return false;
 }
-
-//void MyWindow::checkBoxSave(QString name, QListWidgetItem *item)
-//{
-//	settings->setValue(name, (int)item->checkState());
-//}
-//
-//void MyWindow::checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue)
-//{
-//	item->setCheckState((Qt::CheckState)settings->value(name, defaultValue).toInt());
-//}
 
 void MyWindow::moreMenuVision(QListWidgetItem* item)
 {
@@ -244,7 +221,7 @@ void MyWindow::moreMenuVision(QListWidgetItem* item)
 }
 
 void MyWindow::moreShowList()
-{	
+{
 	if (repeatable == false)
 		repeatable = true;
 	else
@@ -255,7 +232,7 @@ void MyWindow::moreShowList()
 void MyWindow::buttonPosUp()
 {
 	int currentRowUp = listingLeft->QListWidget::currentRow();
-	
+
 	if (currentRowUp > 0)
 	{
 		QListWidgetItem tmp = *(listingLeft->currentItem());
@@ -275,7 +252,7 @@ void MyWindow::buttonPosDown()
 	int currentRowDown = listingLeft->QListWidget::currentRow();
 	int borderDown = listingLeft->count();
 	borderDown--;
-	if (currentRowDown < borderDown  && currentRowDown >= 0)
+	if (currentRowDown < borderDown && currentRowDown >= 0)
 	{
 		QListWidgetItem tmp_2 = *(listingLeft->currentItem());
 		int downRow = currentRowDown + 1;
@@ -290,20 +267,74 @@ void MyWindow::buttonPosDown()
 
 void MyWindow::sepAddingButton()
 {
-	//listingLeft->setStyleSheet("QListWidget::item { border-bottom: 1px solid black; }");
-	QListWidgetItem* sep = new QListWidgetItem;
-	sep->setText(sepsymbol);
-	listingLeft->addItem(sep);
+		QListWidgetItem* curit = listingLeft->currentItem();
+		QListWidgetItem* separ = new QListWidgetItem{};
+				separ->setText(separatorText());
+		if (curit && curit->text().contains(sepstrL))
+		{
+			delete curit;
+		}	
+		else{
+
+			if (curit && !curit->text().contains(sepstrL))
+				{
+					listingLeft->insertItem(listingLeft->currentRow() , separ);
+				}
+				else
+				{
+					listingLeft->insertItem(listingLeft->count() - 1, separ);
+				}
+			}
+
+		sepDisable();
+}
+void MyWindow::sepChange()
+{
+	QListWidgetItem* sepChanger = listingLeft->currentItem();
+	if (sepChanger && sepChanger->text().contains(sepstrL))
+	{
+		addSep->setText(QStringLiteral("Убрать разделитель"));
+	}
+	else
+	{
+		addSep->setText(QStringLiteral("Добавить разделитель"));
+	}
 }
 
-void MyWindow::sepCheck(QListWidgetItem* separator)
+void MyWindow::sepDisable()
 {
-	for (auto leflis : listingLeft->actions())
+	//QList<QListWidgetItem*> sepRow = listingLeft->selectedItems();
+	int sepDi = listingLeft->currentRow();
+	QListWidgetItem* sepdisable = listingLeft->item(sepDi - 1);
+	/*QListWidgetItem* arrowlockup = listingLeft->item(sepDi - 2);
+	QListWidgetItem* arrowlockdown = listingLeft->item(sepDi + 2);*/
+//	QListWidgetItem* haha = sepRow.startsWith();
+	//QListWidgetItem* sepDisabler = sepRow.isEmpty();
+	/*if (sepDi- 1== 0 || arrowlockup && arrowlockup->text().contains(sepstrL))
 	{
-		if (leflis->text().contains(separator->text()))
-		{
-			menu->addSeparator();
-		}
+		up->setDisabled(true);
 	}
+	else
+	{
+		up->setDisabled(false);
+	}
+
+	if (sepDi  == listingLeft->count() || arrowlockdown && arrowlockdown->text().contains(sepstrL))
+	{
+		down->setDisabled(true);
+	}
+	else
+	{
+		down->setDisabled(false);
+	}*/
+
+	if (sepDi == 0 || sepdisable && sepdisable->text().contains(sepstrL))
 	
+	{
+		addSep->setDisabled(true);
+	}
+	else
+	{
+		addSep->setDisabled(false);
+	}
 }

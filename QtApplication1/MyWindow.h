@@ -27,8 +27,6 @@ protected:
 	bool eventFilter(QObject* watched, QEvent* event) final;
 
 private:
-	/*void checkBoxSave(QString name, QListWidgetItem*item);
-	void checkBoxLoad(QListWidgetItem* item, QString name, int defaultValue);*/
 
 	QList<QAction*> _actions;
 
@@ -40,21 +38,27 @@ private:
 	QSplitter* splitter;
 	QMenu* menu;
 	QMenu* moremenu;
+	QPushButton* addSep = new QPushButton;
 
-	QString strMore = (QStringLiteral("Дополнительно "));
-	std::wstring sepstrL = L"\u2015";//	midline symbol
-	QString sepstr = QString::fromStdWString(sepstrL);
-	#define sepsymbol sepstr+sepstr+sepstr+sepstr+sepstr+sepstr+sepstr+sepstr
+	std::wstring strRight = L"\u276f";	//arrow right
+	QString sRight = QString::fromStdWString(strRight);
+	std::wstring strUp = L"\u25b2";			//arrow up
+	std::wstring strDown = L"\u25bc";		//arrow down
+	QString sUp = QString::fromStdWString(strUp);
+	QString sDown = QString::fromStdWString(strDown);
+	QPushButton* up = new QPushButton(sUp);
+	QPushButton* down = new QPushButton(sDown);
+
 	bool repeatable {false};
-	
+
 private slots:
 	void moreMenuVision(QListWidgetItem *item);
 	void moreShowList();//unused + no need
 	void buttonPosUp();
 	void buttonPosDown();
 	void sepAddingButton();
-	void sepCheck(QListWidgetItem* separator);
-
+	void sepChange();
+	void sepDisable();
 };
 
 #endif

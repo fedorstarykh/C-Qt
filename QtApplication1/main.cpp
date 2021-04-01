@@ -13,13 +13,13 @@ int main(int argc, char** argv)
 	QApplication app{ argc, argv };
 	
 	QList<QAction*> actions;
-	
-	actions.push_back(new QAction{ QStringLiteral("Copy")});
-	actions.push_back(new QAction{ QStringLiteral("Cut") });
-	actions.push_back(new QAction{ QStringLiteral("Paste") });
-	actions.push_back(new QAction{ QStringLiteral("Delete") });
+	//adding actions to list
+	actions.push_back(new QAction{ QStringLiteral("Копировать")});
+	actions.push_back(new QAction{ QStringLiteral("Вырезать") });
+	actions.push_back(new QAction{ QStringLiteral("Вставить") });
+	actions.push_back(new QAction{ QStringLiteral("Удалить") });
 
-	QSettings sett{"ORG", "MyProgram"};
+	QSettings sett{ "settings.ini", QSettings::Format::IniFormat};
 	QByteArray data = sett.value("Settings").toByteArray();
 	MyWindow window{actions};
 	bool ok = window.load(data);
