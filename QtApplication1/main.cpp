@@ -14,7 +14,10 @@ int main(int argc, char** argv)
 	
 	QList<QAction*> actions;
 	//adding actions to list
-	actions.push_back(new QAction{ QStringLiteral("Копировать")});
+	actions.push_back(new QAction{ QStringLiteral("Доп.Пункт1")});
+	actions.push_back(new QAction{ QStringLiteral("Доп.Пункт2") });
+	actions.push_back(new QAction{ QStringLiteral("Доп.Пункт3") });
+	actions.push_back(new QAction{ QStringLiteral("Копировать") });
 	actions.push_back(new QAction{ QStringLiteral("Вырезать") });
 	actions.push_back(new QAction{ QStringLiteral("Вставить") });
 	actions.push_back(new QAction{ QStringLiteral("Удалить") });

@@ -21,13 +21,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	_actions{ actions },
 	splitter{ new QSplitter{this} }
 {
-	
-
-	
-
-
-	
-	addSep->setText(QStringLiteral("Добавить разделитель"));
+		addSep->setText(QStringLiteral("Добавить разделитель"));
 	//menu
 	splitter = new QSplitter(Qt::Horizontal);
 
@@ -43,7 +37,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	menu->installEventFilter(this);
 	for (auto actm : _actions)
 	{
-		auto itemm = new QAction;
+		auto* itemm = new QAction;
 		itemm->setText(actm->text());
 		menu->addAction(itemm);
 		if (itemm->text().contains(QString(QStringLiteral("Дополнительно"))))
@@ -85,20 +79,25 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 	menuWgtLayout->addWidget(moremenu);
 	menuWgtLayout->setSpacing(0);
 	menuWgt->setLayout(menuWgtLayout);
-	QAction* pactMore = new QAction;
+	
 	pactMore->setText(QStringLiteral("Дополнительно ") + sRight);
 	menu->addAction(pactMore);
 	menu->setMinimumWidth(menu->sizeHint().width());
 	moremenu->setMinimumWidth(menu->sizeHint().width());
 
+	//connections
 	connect(listingLeft, SIGNAL(itemChanged(QListWidgetItem*)),
 		SLOT(moreMenuVision(QListWidgetItem*)));//changing moremenu 
 	connect(up, SIGNAL(clicked()), SLOT(buttonPosUp()));//moving up
 	connect(down, SIGNAL(clicked()), SLOT(buttonPosDown()));//moving down
+
+//	connect(down, &QPushButton::clicked, this, &MyWindow::buttonPosDown);
+	//connect(down, SIGNAL(triggered()), SLOT(buttonPosDown()));
 	connect(addSep, SIGNAL(clicked()), SLOT(sepAddingButton()));//add separator
 	connect(listingLeft, SIGNAL(itemSelectionChanged()), SLOT(sepChange()));//add separator
 	connect(listingLeft, SIGNAL(itemSelectionChanged()), SLOT(sepDisable()));//add separator
-	connect(listingLeft, SIGNAL(currentItemChanged()), SLOT(sepDisable()));
+	connect(listingLeft, SIGNAL(currentItemChanged()), SLOT(sepDisable()));//add separator extra connect
+
 	//cursor for buttons
 	QCursor curPointing(Qt::PointingHandCursor);
 	up->setCursor(curPointing);
@@ -155,7 +154,6 @@ QByteArray MyWindow::save() const
 	QByteArray arr;
 	{
 		QDataStream stream{ &arr, QIODevice::WriteOnly };
-		int itemStatus;
 		stream << listingLeft->count();
 		for (int i = 0; i < listingLeft->count(); i++)
 		{
@@ -244,6 +242,30 @@ void MyWindow::buttonPosUp()
 		listingLeft->insertItem(currentRowUp, listingLeft->item(upRow));
 		listingLeft->setCurrentItem(listingLeft->item(upRow));
 
+		auto actions = menu->actions();
+		//TODO: прочитать про алгоритм find/find_if
+		auto foundAct = std::find_if(std::begin(actions), std::end(actions), [text = listingLeft->currentItem()->text()](QAction* act)
+			{
+				return act->text().contains(text);
+			});
+		if (foundAct == std::end(actions))
+			return;
+		Q_ASSERT(foundAct != std::begin(actions));
+
+		auto prev = foundAct - 1;
+		std::swap(*foundAct, *prev);
+		auto item = listingLeft->currentItem();
+		auto check = item->checkState();
+			menu->clear();
+			menu->addActions(actions);
+	/*	if (check == true)
+		{
+		}
+		else if (check == false)
+		{
+			moremenu->clear();
+			moremenu->addActions(actions);
+		}*/
 	}
 }
 
@@ -262,11 +284,41 @@ void MyWindow::buttonPosDown()
 
 		listingLeft->insertItem(currentRowDown, listingLeft->item(downRow));
 		listingLeft->setCurrentItem(listingLeft->item(downRow));
+		
+		auto actions = menu->actions();
+		//TODO: прочитать про алгоритм find/find_if
+		auto foundAct = std::find_if(std::begin(actions), std::end(actions), [text = listingLeft->currentItem()->text()](QAction* act)
+		{
+			return act->text().contains(text);
+		});
+		if (foundAct == std::end(actions))
+			return;
+		Q_ASSERT(foundAct != std::end(actions));
+		auto currentItem = listingLeft->currentItem();
+		auto prev = foundAct + 1;
+		std::swap(*foundAct, *prev);
+
+		auto item = listingLeft->currentItem();
+		auto check = item->checkState();
+			menu->clear();
+			menu->addActions(actions);
+		/*if (check == true )
+		{
+		}
+		else if (check == false)
+		{
+			moremenu->clear();
+			moremenu->addActions(actions);
+		}*/
 	}
+
+	
 }
 
 void MyWindow::sepAddingButton()
-{
+{	
+	
+
 		QListWidgetItem* curit = listingLeft->currentItem();
 		QListWidgetItem* separ = new QListWidgetItem{};
 				separ->setText(separatorText());
@@ -279,15 +331,37 @@ void MyWindow::sepAddingButton()
 			if (curit && !curit->text().contains(sepstrL))
 				{
 					listingLeft->insertItem(listingLeft->currentRow() , separ);
+				
+					//menu->insertSeparator(action);// надо получать элемент меню соответствующий листвиджету
 				}
 				else
-				{
-					listingLeft->insertItem(listingLeft->count() - 1, separ);
+				{	
+					int limitSep = listingLeft->count() - sepCounterExp;
+					listingLeft->insertItem(limitSep, separ);
+					//menu->insertSeparator();
+
+					if (limitSep <= listingLeft->count())
+					{
+						sepCounterExp = sepCounterExp + 2;
+					}
+					if (sepCounterExp >= listingLeft->count())//blocking separator overfilling
+					{
+						addSep->setDisabled(true);
+					}
+				/*	if (limitSep == 1)
+					{
+						addSep->setDisabled(true);
+					}
+					else if ()
+					{
+						addSep->setDisabled(false);
+					}*/
 				}
 			}
 
 		sepDisable();
 }
+
 void MyWindow::sepChange()
 {
 	QListWidgetItem* sepChanger = listingLeft->currentItem();

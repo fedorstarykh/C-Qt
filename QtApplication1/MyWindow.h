@@ -48,9 +48,9 @@ private:
 	QString sDown = QString::fromStdWString(strDown);
 	QPushButton* up = new QPushButton(sUp);
 	QPushButton* down = new QPushButton(sDown);
-
+	QAction* pactMore = new QAction;
 	bool repeatable {false};
-
+	int sepCounterExp {1};
 private slots:
 	void moreMenuVision(QListWidgetItem *item);
 	void moreShowList();//unused + no need
