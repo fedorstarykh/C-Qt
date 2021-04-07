@@ -11,7 +11,7 @@
 #include "MyWindow.h"
 
 static const QChar sepstrL{ 0x2015 };
-static QString separatorText()
+static QString separatorText()//separator
 {
 	return { 10, sepstrL };
 }
@@ -33,6 +33,7 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		listingLeft->addItem(item);
 		item->setCheckState(Qt::Checked);
 	}
+
 	menu = new QMenu;
 	menu->installEventFilter(this);
 	for (auto actm : _actions)
@@ -90,9 +91,6 @@ MyWindow::MyWindow(QList<QAction*> actions, QWidget* parent, QString name) :
 		SLOT(moreMenuVision(QListWidgetItem*)));//changing moremenu 
 	connect(up, SIGNAL(clicked()), SLOT(buttonPosUp()));//moving up
 	connect(down, SIGNAL(clicked()), SLOT(buttonPosDown()));//moving down
-
-//	connect(down, &QPushButton::clicked, this, &MyWindow::buttonPosDown);
-	//connect(down, SIGNAL(triggered()), SLOT(buttonPosDown()));
 	connect(addSep, SIGNAL(clicked()), SLOT(sepAddingButton()));//add separator
 	connect(listingLeft, SIGNAL(itemSelectionChanged()), SLOT(sepChange()));//add separator
 	connect(listingLeft, SIGNAL(itemSelectionChanged()), SLOT(sepDisable()));//add separator
@@ -164,6 +162,7 @@ QByteArray MyWindow::save() const
 	}
 	return arr;
 }
+
 bool MyWindow::load(const QByteArray& data)
 {
 	QDataStream stream{ data };
@@ -243,29 +242,42 @@ void MyWindow::buttonPosUp()
 		listingLeft->setCurrentItem(listingLeft->item(upRow));
 
 		auto actions = menu->actions();
-		//TODO: прочитать про алгоритм find/find_if
-		auto foundAct = std::find_if(std::begin(actions), std::end(actions), [text = listingLeft->currentItem()->text()](QAction* act)
+		auto actSepCheck = listingLeft->currentItem()->text();// taking element text
+		auto moreacts = moremenu->actions();
+		auto check = listingLeft->currentItem()->checkState();
+		
+		if (check == 2 /*&& actSepCheck != sepstrL*/)
+		{
+			auto foundAct = std::find_if(std::begin(actions), std::end(actions), [text = listingLeft->currentItem()->text()](QAction* act)
 			{
 				return act->text().contains(text);
 			});
-		if (foundAct == std::end(actions))
-			return;
-		Q_ASSERT(foundAct != std::begin(actions));
+			if (foundAct == std::end(actions) )
+				return;
+			Q_ASSERT(foundAct != std::begin(actions));
 
-		auto prev = foundAct - 1;
-		std::swap(*foundAct, *prev);
-		auto item = listingLeft->currentItem();
-		auto check = item->checkState();
+			auto prev = foundAct - 1;
+			std::swap(*foundAct, *prev);
+			auto item = listingLeft->currentItem();
+			auto check = item->checkState();
 			menu->clear();
 			menu->addActions(actions);
-	/*	if (check == true)
-		{
 		}
-		else if (check == false)
+		else /*if (actSepCheck != sepstrL)*/
 		{
+			auto foundAct = std::find_if(std::begin(moreacts), std::end(moreacts), [text = listingLeft->currentItem()->text()](QAction* act)
+			{
+				return act->text().contains(text);
+			});
+			if (foundAct == std::begin(moreacts) )
+				return;
+			Q_ASSERT(foundAct != std::begin(moreacts));
+
+			auto prev = foundAct - 1;
+			std::swap(*foundAct, *prev);
 			moremenu->clear();
-			moremenu->addActions(actions);
-		}*/
+			moremenu->addActions(moreacts);
+		}
 	}
 }
 
@@ -286,80 +298,91 @@ void MyWindow::buttonPosDown()
 		listingLeft->setCurrentItem(listingLeft->item(downRow));
 		
 		auto actions = menu->actions();
-		//TODO: прочитать про алгоритм find/find_if
+		auto moreacts = moremenu->actions();
+		auto check = listingLeft->currentItem()->checkState();
+
+		if (check == 2 )
+		{	
 		auto foundAct = std::find_if(std::begin(actions), std::end(actions), [text = listingLeft->currentItem()->text()](QAction* act)
 		{
 			return act->text().contains(text);
 		});
-		if (foundAct == std::end(actions))
+			if (foundAct == std::end(actions))
 			return;
 		Q_ASSERT(foundAct != std::end(actions));
-		auto currentItem = listingLeft->currentItem();
-		auto prev = foundAct + 1;
-		std::swap(*foundAct, *prev);
 
-		auto item = listingLeft->currentItem();
-		auto check = item->checkState();
+			auto prev = foundAct + 1;
+			std::swap(*foundAct, *prev);
 			menu->clear();
 			menu->addActions(actions);
-		/*if (check == true )
-		{
 		}
-		else if (check == false)
+		
+		else /*if (check == false)*/
 		{
-			moremenu->clear();
-			moremenu->addActions(actions);
-		}*/
-	}
+			auto foundAct = std::find_if(std::begin(moreacts), std::end(moreacts), [text = listingLeft->currentItem()->text()](QAction* act)
+			{
+				return act->text().contains(text);
+			});
+			if (foundAct == std::end(moreacts))
+				return;
+			Q_ASSERT(foundAct != std::end(moreacts));
 
-	
+			auto prev = foundAct + 1;
+			std::swap(*foundAct, *prev);
+			moremenu->clear();
+			moremenu->addActions(moreacts);
+		}	
+	}
 }
 
 void MyWindow::sepAddingButton()
 {	
-	
-
 		QListWidgetItem* curit = listingLeft->currentItem();
 		QListWidgetItem* separ = new QListWidgetItem{};
-				separ->setText(separatorText());
+		separ->setText(separatorText());
+
 		if (curit && curit->text().contains(sepstrL))
 		{
 			delete curit;
 		}	
-		else{
-
+		else
+		{
 			if (curit && !curit->text().contains(sepstrL))
-				{
-					listingLeft->insertItem(listingLeft->currentRow() , separ);
-				
-					//menu->insertSeparator(action);// надо получать элемент меню соответствующий листвиджету
-				}
-				else
-				{	
-					int limitSep = listingLeft->count() - sepCounterExp;
-					listingLeft->insertItem(limitSep, separ);
-					//menu->insertSeparator();
+			{
+				listingLeft->insertItem(listingLeft->currentRow() , separ);	
+			}
+			else
+			{	
+				int limitSep = listingLeft->count() - sepCounterExp;
+				listingLeft->insertItem(limitSep, separ);
 
-					if (limitSep <= listingLeft->count())
-					{
-						sepCounterExp = sepCounterExp + 2;
-					}
-					if (sepCounterExp >= listingLeft->count())//blocking separator overfilling
-					{
-						addSep->setDisabled(true);
-					}
-				/*	if (limitSep == 1)
-					{
-						addSep->setDisabled(true);
-					}
-					else if ()
-					{
-						addSep->setDisabled(false);
-					}*/
+				auto actions = menu->actions();
+				auto moreacts = moremenu->actions();
+				auto check = listingLeft->currentItem()->checkState();
+				auto foundAct = std::find_if(std::begin(actions), std::end(actions), [text = listingLeft->currentItem()->text()](QAction* act)
+				{
+					return act->text().contains(text);
+				});
+				if (foundAct == std::end(actions))
+					return;
+				Q_ASSERT(foundAct != std::begin(actions));
+
+				auto item = listingLeft->currentItem();
+				auto check = item->checkState();
+				menu->clear();
+				menu->addActions(actions);
+
+				if (limitSep <= listingLeft->count())
+				{
+					sepCounterExp = sepCounterExp + 2;
+				}
+				if (sepCounterExp >= listingLeft->count())//blocking separator overfilling
+				{
+						addSep->setDisabled(true);	
 				}
 			}
-
-		sepDisable();
+		}
+sepDisable();
 }
 
 void MyWindow::sepChange()

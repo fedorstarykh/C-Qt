@@ -14,13 +14,13 @@ int main(int argc, char** argv)
 	
 	QList<QAction*> actions;
 	//adding actions to list
-	actions.push_back(new QAction{ QStringLiteral("Доп.Пункт1")});
-	actions.push_back(new QAction{ QStringLiteral("Доп.Пункт2") });
-	actions.push_back(new QAction{ QStringLiteral("Доп.Пункт3") });
-	actions.push_back(new QAction{ QStringLiteral("Копировать") });
-	actions.push_back(new QAction{ QStringLiteral("Вырезать") });
-	actions.push_back(new QAction{ QStringLiteral("Вставить") });
-	actions.push_back(new QAction{ QStringLiteral("Удалить") });
+	actions.push_back(new QAction{ QStringLiteral("Пункт1")});
+	actions.push_back(new QAction{ QStringLiteral("Пункт2")});
+	actions.push_back(new QAction{ QStringLiteral("Пункт3")});
+	actions.push_back(new QAction{ QStringLiteral("Пункт4")});
+	actions.push_back(new QAction{ QStringLiteral("Пункт5")});
+	actions.push_back(new QAction{ QStringLiteral("Пункт6")});
+	actions.push_back(new QAction{ QStringLiteral("Пункт7")});
 
 	QSettings sett{ "settings.ini", QSettings::Format::IniFormat};
 	QByteArray data = sett.value("Settings").toByteArray();
