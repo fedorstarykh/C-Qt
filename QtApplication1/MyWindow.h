@@ -52,7 +52,7 @@ private:
 	QAction* pactMore = new QAction;
 
 	bool repeatable {false};
-	int sepCounterExp {1};
+
 private slots:
 	void moreMenuVision(QListWidgetItem *item);
 	void moreShowList();//unused + no need
